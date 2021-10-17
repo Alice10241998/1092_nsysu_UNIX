@@ -1,0 +1,135 @@
+Receiving room
+You are in a round, stone room with a door to the east.  There
+is a sign on the wall that reads: ‘receiving room’.
+There is a lamp nearby.
+There is a shiny brass key here.
+There is a shovel here.
+There is a slip of paper here.
+There is an axe here.
+There is an emerald bracelet here.
+>x lamp
+The lamp is hand-crafted by Geppetto.
+>x shovel
+It is a normal shovel with a price tag attached that says $19.99.
+>e
+Northbound Hallway
+You are at the south end of a hallway that leads to the north.  There
+are rooms to the east and west.
+>n
+End of N/S Hallway
+You are at the end of a north/south hallway.  You can go back to the south,
+or off to a room to the east.
+>e
+Weight room
+You are in an old weight room.  All of the equipment is either destroyed or
+completely broken.  There is a door out to the west, and there is a ladder
+leading down a hole in the floor.
+There is a 10 pound weight here.
+There is a life preserver here.
+>i
+You currently have:
+>getall
+Taken: a preserver
+Taken: a weight
+>i
+You currently have:
+A preserver
+A weight
+>d
+Maze button room
+You are in a maze of twisty little passages, all alike.
+There is a button on the ground here.
+>cd ../../../../../buttonRoom
+>l
+Maze button room
+You are in a maze of twisty little passages, all alike.
+There is a button on the ground here.
+>nw
+Maze
+You are in a maze of little twisty passages, all alike.
+>u
+Maze 
+You are in a maze of thirsty little passages, all alike.
+There is a floppy disk here.
+There is a wax statuette of Richard Stallman here.
+>se
+Maze  
+You are in a maze of twenty little passages, all alike.
+>d
+Maze   
+You are in a daze of twisty little passages, all alike.
+>nw
+Maze    
+You are in a maze of twisty little cabbages, all alike.
+>nw
+Reception area
+You are in a reception area for a health and fitness center.  The place
+appears to have been recently ransacked, and nothing is left.  There is
+a door out to the south, and a crawlspace to the southeast.
+>s
+Health Club front
+You are outside a large building to the north which used to be a health
+and fitness center.  A road leads to the south.
+>s
+Lakefront North
+You are at the north side of a lake.  On the other side you can see
+a road which leads to a cave.  The water appears very deep.
+>s
+Lakefront South
+You are at the south side of a lake.  A road goes to the south.
+>s
+Cave Entrance
+The entrance to a cave is to the south.  To the north, a road leads
+towards a deep lake.  On the ground nearby there is a chute, with a sign
+that says ‘put treasures here for points’.
+>s
+Misty Room
+You are in a misty, humid room carved into a mountain.
+To the north is the remains of a rockslide.  To the east, a small
+passage leads away into the darkness.
+There is a gold bar here.
+>getall
+Taken: a gold
+>i
+You currently have:
+A gold
+A preserver
+A weight
+>e
+Cave E/W passage
+You are in an east/west passageway.  The walls here are made of
+multicolored rock and are quite beautiful.
+>e
+N/S/W Junction
+You are at the junction of two passages. One goes north/south, and
+the other goes west.
+>n
+North end of cave passage
+You are at the north end of a north/south passageway.  There are stairs
+leading down from here.  There is also a door leading west.
+>d
+Bedroom
+You are in what appears to be a worker's bedroom.  There is a queen-
+sized bed in the middle of the room, and a painting hanging on the
+wall.  A door leads to another room to the south, and stairways
+lead up and down.
+>s
+Bathroom
+You are in a bathroom built for workers in the cave.  There is a
+urinal hanging on the wall, and some exposed pipes on the opposite
+wall where a sink used to be.  To the north is a bedroom.
+>flush
+Whoooosh!!
+>put
+You hear it plop down in some water below.
+>i
+You currently have:
+A preserver
+A weight
+>score
+You have scored 00 points.
+>flush
+Whoooosh!!
+You have scored 10 points.
+>quit
+You have scored 10 points.
