@@ -1,0 +1,198 @@
+Receiving room
+You are in a round, stone room with a door to the east.  There
+is a sign on the wall that reads: ‘receiving room’.
+There is a lamp nearby.
+There is a shiny brass key here.
+There is a shovel here.
+There is a slip of paper here.
+There is an axe here.
+There is an emerald bracelet here.
+>touch ~/_/i/i/floppy
+>i
+You currently have:
+A floppy
+>get all
+An axe: Taken.
+A bracelet: Taken.
+A brass key: Taken.
+A lamp: Taken.
+A slip of paper: Taken.
+A shovel: Taken.
+>e
+Northbound Hallway
+You are at the south end of a hallway that leads to the north.  There
+are rooms to the east and west.
+>drop shovel
+Done.
+>e
+Sauna
+You are in a sauna.  There is nothing in the room except for a dial
+on the wall.  A door leads out to west.
+It is normal room temperature in here.
+>w
+Northbound Hallway
+There is a shovel here.
+>n
+End of N/S Hallway
+You are at the end of a north/south hallway.  You can go back to the south,
+or off to a room to the east.
+>w
+You cannot go that way.
+>e
+Weight room
+You are in an old weight room.  All of the equipment is either destroyed or
+completely broken.  There is a door out to the west, and there is a ladder
+leading down a hole in the floor.
+There is a 10 pound weight here.
+There is a life preserver here.
+>cd ~/_/mistyRoom/e/e/
+>w
+Cave E/W passage
+You are in an east/west passageway.  The walls here are made of
+multicolored rock and are quite beautiful.
+>w
+Misty Room
+You are in a misty, humid room carved into a mountain.
+To the north is the remains of a rockslide.  To the east, a small
+passage leads away into the darkness.
+There is a gold bar here.
+>e
+Cave E/W passage
+>drop paper
+Done.
+>e
+N/S/W Junction
+You are at the junction of two passages. One goes north/south, and
+the other goes west.
+>n
+North end of cave passage
+You are at the north end of a north/south passageway.  There are stairs
+leading down from here.  There is also a door leading west.
+>w
+You must type a 3 digit combination code to enter this room.
+Enter it here: Gamma computing center
+You are in the Gamma Computing Center.  An IBM 3090/600s is whirring
+away in here.  There is an ethernet cable coming out of one of the units,
+and going through the ceiling.  There is no console here on which you
+could type.
+>drop bracelet
+Done.
+>i
+You currently have:
+A axe
+A floppy
+A key
+A lamp
+>break cable
+As you break the ethernet cable, everything starts to blur.  You collapse
+for a moment, then straighten yourself up.
+
+Connection closed.
+$ ls
+total 108
+drwxr-xr-x 1 toukmond restricted      512 Jan 1 1970 .
+drwxr-xr-x 3 root     staff          2048 Jan 1 1970 ..
+-rwxr-xr-x 1 toukmond restricted    10423 Jan 1 1970 uncompress
+-rwxr-xr-x 1 toukmond restricted    10423 Jan 1 1970 ssh
+-rwxr-xr-x 1 toukmond restricted    10423 Jan 1 1970 rlogin
+-rwxr-xr-x 1 toukmond restricted    10423 Jan 1 1970 pwd
+-rwxr-xr-x 1 toukmond restricted    10423 Jan 1 1970 ls
+-rwxr-xr-x 1 toukmond restricted    10423 Jan 1 1970 ftp
+-rwxr-xr-x 1 toukmond restricted    10423 Jan 1 1970 echo
+-rwxr-xr-x 1 toukmond restricted    10423 Jan 1 1970 cd
+-rwxr-xr-x 1 toukmond restricted    10423 Jan 1 1970 cat
+-rw-r--r-- 1 toukmond restricted        0 Jan 1 1970 key.o
+$ echo
+
+$ cd
+Usage: cd <path>
+$ pwd
+/usr/toukmond/
+$ cat
+Usage: cat <ascii-file-name>
+$ echo x
+x
+$ cd x
+No such directory.
+$ pwd x
+/usr/toukmond/
+$ cat x
+File not found.
+$ cd key.o
+No such directory.
+$ cat key.o
+Ascii files only.
+$ cd /
+$ pwd
+/
+$ ls
+total 4
+drwxr-xr-x 3 root     staff           512 Jan 1 1970 .
+drwxr-xr-x 3 root     staff          2048 Jan 1 1970 ..
+drwxr-xr-x 3 root     staff             0 Jan 1 1970 usr
+drwxr-xr-x 3 root     staff             0 Jan 1 1970 rooms
+$ cd rooms
+$ ls
+total 8
+drwxr-xr-x 3 root     staff           512 Jan 1 1970 .
+drwxr-xr-x 3 root     staff          2048 Jan 1 1970 ..
+drwxr-xr-x 3 root     staff             0 Jan 1 1970 weight-room
+drwxr-xr-x 3 root     staff             0 Jan 1 1970 sauna
+drwxr-xr-x 3 root     staff             0 Jan 1 1970 receiving-room
+drwxr-xr-x 3 root     staff             0 Jan 1 1970 northbound-hallway
+drwxr-xr-x 3 root     staff             0 Jan 1 1970 north-end-of-cave-passage
+drwxr-xr-x 3 root     staff             0 Jan 1 1970 n-s-w-junction
+drwxr-xr-x 3 root     staff             0 Jan 1 1970 misty-room
+drwxr-xr-x 3 root     staff             0 Jan 1 1970 gamma-computing-center
+drwxr-xr-x 3 root     staff             0 Jan 1 1970 end-of-n-s-hallway
+drwxr-xr-x 3 root     staff             0 Jan 1 1970 cave-e-w-passage
+$ cd gamma-computing-center
+$ ls
+total 1
+drwxr-xr-x 3 root     staff           512 Jan 1 1970 .
+drwxr-xr-x 3 root     staff          2048 Jan 1 1970 ..
+-rwxr-xr-x 3 root     staff          2048 Jan 1 1970 description
+-rw-r--r-- 1 toukmond restricted        0 Jan 1 1970 lamp.o
+-rw-r--r-- 1 toukmond restricted        0 Jan 1 1970 floppy.o
+-rw-r--r-- 1 toukmond restricted        0 Jan 1 1970 bracelet.o
+-rw-r--r-- 1 toukmond restricted        0 Jan 1 1970 axe.o
+$ cat description
+Gamma computing center
+You are in the Gamma Computing Center.  An IBM 3090/600s is whirring
+away in here.  There is an ethernet cable coming out of one of the units,
+and going through the ceiling.  There is no console here on which you
+could type.
+$ cd ../../usr
+$ ls
+total 4
+drwxr-xr-x 3 root     staff           512 Jan 1 1970 .
+drwxr-xr-x 3 root     staff          2048 Jan 1 1970 ..
+drwxr-xr-x 1 toukmond restricted        0 Jan 1 1970 toukmond
+$ cd /rooms/misty-room
+$ ls
+total 1
+drwxr-xr-x 3 root     staff           512 Jan 1 1970 .
+drwxr-xr-x 3 root     staff          2048 Jan 1 1970 ..
+-rwxr-xr-x 3 root     staff          2048 Jan 1 1970 description
+-rw-r--r-- 1 toukmond restricted        0 Jan 1 1970 gold.o
+$ cat description
+Misty Room
+You are in a misty, humid room carved into a mountain.
+To the north is the remains of a rockslide.  To the east, a small
+passage leads away into the darkness.
+$ echo After we exit, the next command will always be "quit"
+After we exit, the next command will always be "quit"
+$ exit
+
+You step back from the console.
+
+Computer room
+You are in a computer room.  It seems like most of the equipment has
+been removed.  There is a VAX 11/780 in front of you, however, with
+one of the cabinets wide open.  A sign on the front of the machine
+says: This VAX is named ‘pokey’.  To type on the console, use the
+‘type’ command.  The exit is to the east.
+The panel lights are flashing in a seemingly organized pattern.
+>quit
+
+You have scored 0 points.

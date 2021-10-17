@@ -1,0 +1,26 @@
+ls
+echo
+cd
+pwd
+cat
+echo x
+cd x
+pwd x
+cat x
+cd key.o
+cat key.o
+cd /
+pwd
+ls
+cd rooms
+ls
+cd gamma-computing-center
+ls
+cat description
+cd ../../usr
+ls
+cd /rooms/misty-room
+ls
+cat description
+echo After we exit, the next command will always be "quit"
+exit

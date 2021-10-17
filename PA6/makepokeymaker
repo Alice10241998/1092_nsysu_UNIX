@@ -1,0 +1,25 @@
+#!/usr/bin/sed -f
+1{x
+  s`$`mkdir pokey`p; s`$`/rooms`p; s`rooms`usr`p; s`$`/toukmond`p
+  s`.*`seq 2306 > pokey/usr/toukmond/`
+  s`.*`&cd;&ls;&ftp;&echo;&pwd;&rlogin;&ssh;&uncompress;&cat`p
+  g}
+/filenamesdir/{N;N;d}
+w FOO
+s/==> //
+s/des.*//
+h
+z
+N
+y_ /ABCDEFGHIJKLMNOPQRSTUVWXYZ_-\-abcdefghijklmnopqrstuvwxyz_
+G
+$!N
+s/\n/@/2
+s/\n//g
+h
+s`^`pokey/rooms/`
+s`\(.*\)@\(.*\)`mkdir \1; cp \2*[awokevrw][sleptmax]*[a-z] \1`p
+s`.*`ls ~/_/i/i/key >\& ~/X \&\& touch pokey/usr/toukmond/key`p
+g
+s`\(.*\)@\(.*\)`touch pokey/rooms/\1 -r \21`
+$a chmod -R 755 pokey
