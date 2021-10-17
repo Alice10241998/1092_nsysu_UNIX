@@ -1,0 +1,221 @@
+Note: I wanted to post some more of the assignment for you to read. Look back
+      later tonight for the full version of this file.
+
+This file describes what needs to go into each of your scripts, in order to get
+the basic test working. Therefore this file is divided into 5 sections.
+
+Furthermore, the individual parts of these scripts are intended to be reused
+in the full implementation. Therefore each section below is sub-divided into
+regions (These parts will then be refered to by their region#, in the guide to
+the full implementation.)
+
+---------------------------------
+| Basic Implementation of "get" |
+---------------------------------
+Line 1: #!/usr/bin/tcsh
+
+#Section #1:
+Line 2: The first argument recieved by this script is supposed to be the name
+        of a file in the current room. This line moves that file to the ~/_/i/_
+        directory.
+
+#Section #2:
+Line 3: cd ~/_/i/_
+
+#Section #3:
+Line 4: This line moves everything from ~/_/i/_ into ~/_/i/i. It should not
+        produce an error message if nothing is there. It also should print
+	"Taken.", if successful.
+        Note: To make the basic test run, we could always print "Taken." But
+	      we are designing this line in such a way that it can be reused
+	      in the full implementation. So the handling of error messages
+	      and the "Taken." statement are necessary.
+
+And that is the end of this very simple get script. Note: the full version is
+much more complex, because it needs to handle "get all" and "get weight" if it
+unpresses the button.
+
+
+----------------------------------
+| Basic Implementation of "drop" |
+----------------------------------
+Line 1: #!/usr/bin/tcsh
+
+As for the remaining lines, they form a giant "if (...) then ... else if (...)
+then ... else if (...) then ... else ..." structure. The bodies of the four
+if-cases that are thus created correspond to the following 4 outputs:
+ 1. "You must supply an object."
+ 2. "Done."
+ 3. "I don't know what that is." (In this basic implementation, skip this one.)
+ 4. "You don't have that."
+
+In the case of "Done.", you need to do more than display the message. You also
+need to: 1) Move the object from ~/_/i/i to the room, and 2) Handle with the
+situation of dropping the weight on the button. If this situation is detected,
+then you need:
+ - To display "A passageway opens."
+ - To modify the passages out of the room. So you will need to make links (to
+   the current directory) for the directions of d, e, ne, se, sw, and w. Also,
+   the passageway to the northwest needs to be opened and the ladder going up
+   needs to be blocked. You do this by renaming ".nw" to "nw" and "u" to ".u".
+
+
+----------------------------------
+| Basic Implementation of "break" |
+----------------------------------
+Line 1: #!/usr/bin/tcsh
+
+Ignoring for the moment the final line of the break file (which is "exit 1"),
+all of the other remaining lines form a giant "if (...) then ... else if (...)
+then ... else if (...) then ... else if (...) then ... else if (...) then ...
+else if (...) then ... else if (...) then ... else ..." structure. The bodies
+of the eight if-cases thus created correspond to the following 8 outputs:
+ 1. "You have nothing you can use to break things."
+ 2. "You must supply an object."
+ 3. "I don't know what that is."
+ 4. "I don't see that here."
+ 5. "Your axe breaks it into a million pieces."
+ 6. "As you break the ethernet cable, everything starts to blur.  You colla..."
+ 7. "Your axe shatters into a million pieces."
+ 8. "You take the object in your hands and swing the axe.  Unfortunately, y..."
+
+Note: These 8 cases need to be in the above order, to match the game. If, for
+      example, you type "break dance" without holding the axe, then, logically,
+      either message 1 ("You have nothing...") or message 3 ("I don't know...)
+      would be correct. The game, however, displays message #1 -- hence, these
+      cases have to be in the order indicated above.
+
+Among the above 8 cases, only four are in the basic test (cases 1, 4, 5 and 6).
+Among these 4 basic cases, they do what you would expect:
+- If you don't have an axe, say:"You have nothing you can use to break things."
+- If the first argument is not the name of a file in either your inventory or
+  or the room, then say: "I don't see that here."
+- If the object is in the room, then remove it and say: "Your axe breaks it
+  into a million pieces." (Now, to be technically correct, it is not enough for
+  the object to be in the room. It also needs to be gettable. But this is not
+  a concern for the basic test, as we never try to break ungettable objects).
+- If you break the cable, say "As you break the ethernet cable..." AND also
+  exit with a 0. The 0 indicates "success". For break, success means breaking
+  the cable (which is the only thing you are meant to break). Returning success
+  in only this one condition makes sense with the way break is used. Recall:
+    % grep break= PA3.sh
+    alias break='source ~/PA3/break2'
+    % cat break2
+    ~/PA3/break $* && quit
+    %
+
+At this point, the break command is finished. Except for one final line:
+Final line: exit 1
+            By exiting with a failure value, we prevent the break2 script from
+	    running the quit alias.
+
+
+--------------------------------------
+| Basic Implementation of "cantmove" |
+--------------------------------------
+#!/usr/bin/tcsh
+
+#Section #1 is just the following 2 lines:
+   #set echo
+   set cutfl = "c1-4 --complement"
+The purpose of this line is to encourage you to use "set echo" for debugging.
+The purpose of cutfl is to provide the flags for the cut command. As stated in
+class, it is unfortunate that the --complement flag is so wordy. To compensate,
+I defined a variable with the flags we want.
+
+
+#Section #2:
+This section handles the locked door. There are 6 blanks to fill in:
+   if ( __1__ ) then
+   echo You must type a 3 digit combination code to enter this room.
+   echo __2__
+   set __3__
+   if ( __4__ ) then
+      chmod __5__
+      cd w
+      if ( __6__ ) then
+         grep ~/PA3/expl*Walkthrough.txt -elikely|cut -$cutfl|tee de*
+	 exit 1
+      endif
+   else
+      echo Sorry, that combination is incorrect.&& exit 0
+   endif
+
+__1__ This conditional expression identifies if we're in the right place and
+      are trying to go west. The way to recognize this is to look for the "w"
+      subdirectory if $1=="w". This works because we know that this cantmove
+      script only runs when we have already failed an attempt to go into the
+      subdirectory indicated by $1. As we see here:
+  % grep " w=" PA3.sh
+  alias w='grueK; cd w &>~/X && disp ||~/PA3/cantmove w ||cd w >&~/X||movetry2'
+  %
+  
+__2__: Once we know that the player is trying to get into the locked room, we
+       have to ask for the combination.
+
+__3__: Then we have to read the combination from the keyboard.
+
+__4__: Then we have to test if the combination is correct.
+       But what is the correct combination? Slide 16 of Lecture 3 describes
+       rot-13 encoding. You must use the tr command to transate the encoded
+       savedgame file that I've given you, then grep for the word "combination"
+       to find the answer.
+       (Note: the value is randomly chosen when you start the game, but my
+       savedgame file stores the random value that you will use to decide if
+       the player can enter the gamma computing center.)
+
+__5__: Unlock the door.
+       (Notice that the line after this one is "cd w". But when this cantmove
+       script ends, that "cd w" will be lost. So why do it? It is so that we
+       can display the description, as described in Section 4, below...
+
+__6__: This conditional tests if the lamp is NOT in the inventory.
+       Note: the unusual line below __6__ has similarities to the alias grue.
+
+
+Section 3:
+else if ( __1__ ) then
+   echo You cannot go that way. && exit 0
+else
+   basename `pwd` | tr __2__ | __3__ && echo You cannot go that way. && exit 0
+   cd ..
+endif
+
+__1__: This conditional expression tests whether there is a subdirectory or
+       link named $1.
+       
+__2__: This determines if the current directory name is the OPPOSITE of $1. For
+       example, suppose you go east from the receivingRoom. Then your path will
+       be "~/PA3/rooms/receingingRoom/e", and its basename will be "e".
+       If you then type "w", then the game needs to let you backtrack. And it
+       can know this, because the basename "e" is the opposite of the requested
+       movement "w". To be clear: w and e are opposites, n and s are opposites,
+       and u and d are opposites. Moreover ne, nw, se, and sw are opposites of
+       sw, se, nw, and ne, respectively.
+       
+__3__: Now that __2__ has converted the basename to its opposite, we need to
+       see if tr's output DOESN'T match to $1. (If we checked matching, rather
+       than for not-matching, then the exit 0 would have been put inside of a 
+       parenthesis, preventing it from working.)
+       
+
+#Section #4:
+head -n `ls [19]` de* && mv 9 1 >&~/X
+grep -hw `ls -d * | paste ~/_/es -` -h ~/_/T*|cut -d\; -f1
+exit 3
+    This 3-line section is based on Lines 15 & 16 of PA3.sh, and I am therefore
+    just giving it to you. This section displays the room that we backtracked
+    into. (We still need to move the file 9 to 1, because of the special case
+    of going down the hole into the bathroom. then going north to the bedroom.
+    This going north is accomplished by a "cd ..",  but the bedroom may not
+    have been visited.
+
+
+----------------------------------
+| Basic Implementation of "turn" |
+----------------------------------
+I've decided to move the turn script to a new homework, due after the midterm.
+
+
+
+

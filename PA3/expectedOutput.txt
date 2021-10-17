@@ -1,0 +1,255 @@
+Receiving room
+You are in a round, stone room with a door to the east.  There
+is a sign on the wall that reads: ‘receiving room’.
+There is a lamp nearby.
+There is a shiny brass key here.
+There is a shovel here.
+There is a slip of paper here.
+There is an axe here.
+There is an emerald bracelet here.
+>get lamp
+Taken.
+>e
+Northbound Hallway
+You are at the south end of a hallway that leads to the north.  There
+are rooms to the east and west.
+>n
+End of N/S Hallway
+You are at the end of a north/south hallway.  You can go back to the south,
+or off to a room to the east.
+>e
+Weight room
+You are in an old weight room.  All of the equipment is either destroyed or
+completely broken.  There is a door out to the west, and there is a ladder
+leading down a hole in the floor.
+There is a 10 pound weight here.
+There is a life preserver here.
+>get weight
+Taken.
+>drop weight
+Done.
+>d
+Maze button room
+You are in a maze of twisty little passages, all alike.
+There is a button on the ground here.
+>d
+You cannot go that way.
+>nw
+You cannot go that way.
+>u
+Weight room
+There is a 10 pound weight here.
+There is a life preserver here.
+>get weight
+Taken.
+>d
+Maze button room
+>drop weight
+Done.
+A passageway opens.
+>u
+You cannot go that way.
+>nw
+Maze
+You are in a maze of little twisty passages, all alike.
+>u
+Maze 
+You are in a maze of thirsty little passages, all alike.
+There is a floppy disk here.
+There is a wax statuette of Richard Stallman here.
+>get rms
+Taken.
+>get floppy
+Taken.
+>se
+Maze  
+You are in a maze of twenty little passages, all alike.
+>nw
+You cannot go that way.
+>d
+Maze   
+You are in a daze of twisty little passages, all alike.
+>nw
+Maze    
+You are in a maze of twisty little cabbages, all alike.
+>ne
+Weight room
+There is a life preserver here.
+>w
+End of N/S Hallway
+>s
+Northbound Hallway
+>e
+Sauna
+You are in a sauna.  There is nothing in the room except for a dial
+on the wall.  A door leads out to west.
+It is normal room temperature in here.
+>drop floppy
+Done.
+>w
+Northbound Hallway
+>e
+Sauna
+There is a floppy disk here.
+It is normal room temperature in here.
+>drop lamp
+Done.
+>w
+Northbound Hallway
+>w
+Receiving room
+There is a shiny brass key here.
+There is a shovel here.
+There is a slip of paper here.
+There is an axe here.
+There is an emerald bracelet here.
+>get bracelet
+Taken.
+>drop
+You must supply an object.
+>drop axe
+You don't have that.
+>break
+You have nothing you can use to break things.
+>get axe
+Taken.
+>break paper
+Your axe breaks it into a million pieces.
+>break shovel
+Your axe breaks it into a million pieces.
+>break key
+Your axe breaks it into a million pieces.
+>break dial
+I don't see that here.
+>e
+Northbound Hallway
+>e
+Sauna
+There is a floppy disk here.
+There is a lamp nearby.
+It is normal room temperature in here.
+>w
+Northbound Hallway
+>w
+Receiving room
+>w
+You cannot go that way.
+>e
+Northbound Hallway
+>e
+Sauna
+There is a floppy disk here.
+There is a lamp nearby.
+It is normal room temperature in here.
+>e
+You cannot go that way.
+>get lamp
+Taken.
+>w
+Northbound Hallway
+>n
+End of N/S Hallway
+>e
+Weight room
+There is a life preserver here.
+>get preserver
+Taken.
+>d
+Maze button room
+There is a 10 pound weight here.
+>nw
+Maze
+>u
+Maze 
+>se
+Maze  
+>d
+Maze   
+>nw
+Maze    
+>nw
+Reception area
+You are in a reception area for a health and fitness center.  The place
+appears to have been recently ransacked, and nothing is left.  There is
+a door out to the south, and a crawlspace to the southeast.
+>s
+Health Club front
+You are outside a large building to the north which used to be a health
+and fitness center.  A road leads to the south.
+>s
+Lakefront North
+You are at the north side of a lake.  On the other side you can see
+a road which leads to a cave.  The water appears very deep.
+>s
+Lakefront South
+You are at the south side of a lake.  A road goes to the south.
+>drop preserver
+Done.
+>s
+Cave Entrance
+The entrance to a cave is to the south.  To the north, a road leads
+towards a deep lake.  On the ground nearby there is a chute, with a sign
+that says ‘put treasures here for points’.
+>i
+You currently have:
+A axe
+A bracelet
+A lamp
+A rms
+>put
+You hear it slide down the chute and off into the distance.
+You have scored 10 points.
+>s
+Misty Room
+You are in a misty, humid room carved into a mountain.
+To the north is the remains of a rockslide.  To the east, a small
+passage leads away into the darkness.
+There is a gold bar here.
+>get gold
+Taken.
+>i
+You currently have:
+A axe
+A gold
+A lamp
+A rms
+>e
+Cave E/W passage
+You are in an east/west passageway.  The walls here are made of
+multicolored rock and are quite beautiful.
+>e
+N/S/W Junction
+You are at the junction of two passages. One goes north/south, and
+the other goes west.
+>s
+South end of cave passage
+You are at the south end of a north/south passageway.  There is a hole
+in the floor here, into which you could probably fit.
+>n
+N/S/W Junction
+>n
+North end of cave passage
+You are at the north end of a north/south passageway.  There are stairs
+leading down from here.  There is also a door leading west.
+>w
+You must type a 3 digit combination code to enter this room.
+Enter it here: Sorry, that combination is incorrect.
+>w
+You must type a 3 digit combination code to enter this room.
+Enter it here: Gamma computing center
+You are in the Gamma Computing Center.  An IBM 3090/600s is whirring
+away in here.  There is an ethernet cable coming out of one of the units,
+and going through the ceiling.  There is no console here on which you
+could type.
+>i
+You currently have:
+A axe
+A gold
+A lamp
+A rms
+>break cable
+As you break the ethernet cable, everything starts to blur.  You collapse
+for a moment, then straighten yourself up.
+
+Connection closed.
+You have scored 10 points.

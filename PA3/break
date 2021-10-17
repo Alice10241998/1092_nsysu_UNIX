@@ -1,0 +1,18 @@
+#!/usr/bin/tcsh
+if (! -e ~/_/i/i/axe) then
+    echo "You have nothing you can use to break things."
+
+else if (! -e ~/_/i/i/$1 && ! -e ./$1) then
+    echo "I don't see that here."
+
+else if (-e ./$1 && $1 != "cable") then
+    rm $1
+    echo "Your axe breaks it into a million pieces."
+
+else if ($1 == "cable") then
+    echo "As you break the ethernet cable, everything starts to blur.  You collapse\nfor a moment, then straighten yourself up.\n\nConnection closed."
+    exit 0
+
+endif
+
+exit 1

@@ -1,0 +1,1056 @@
+This new homework will be due on Friday the 16th. The date cannot be moved,
+because you need time to look over the solution before the midterm on Monday
+the 19th of April.
+
+I've provided you with a file PA3.sh, which is an improved form of many parts
+of the previous programming assignment. In this new assignment, we'll fix some
+of the commands to use arguments. We will also implement death. To get your
+PA3.sh file to work, you must implement the scripts that it calls (I have also
+provided you with a few of the simplest such scripts (turn2 and break2). 
+
+I've also made a few changes to the rooms.tar file. Let's see that first:
+    % bash
+    % source ~/PA3/PA3.sh
+    Receiving room
+    You are in a round, stone room with a door to the east.  There
+    is a sign on the wall that reads: ‘receiving room’.
+    There is a lamp nearby.
+    There is a shiny brass key here.
+    There is a shovel here.
+    There is a slip of paper here.
+    There is an axe here.
+    There is an emerald bracelet here.
+    % ls -l ~/_
+    lrwxrwxrwx 1 Me None 18 Apr  2 04:53 /home/Me/_ -> /home/Me/PA3/rooms
+    % ls ~/_/
+    There  buttonRoom  es  filenamesdir i mistyRoom receivingRoom treasureRoom
+    % ls ~/_/filenamesdir/
+    1        button      e       lake     pc         se            temperature5
+    9        cable       floor   lamp     pipe       shovel        temperature6
+    axe      chute       floppy  n        pipes      silver        towel
+    bed      d           gold    ne       platinum   sw            u
+    boulder  description ibm     nw       preserver  temperature2  urinal
+    box      dial        key     painting rms        temperature3  w
+    bracelet diamond     ladder  paper    s          temperature4  weight
+    %
+    
+So the filenamesdir directory has been moved into rooms.tar. This will help you
+with testing your scripts, because this directory now gets reset every time the
+game is restarted. I've also changed the button room's design:
+    % ls -lA ~/_/buttonRoom/
+    total 7
+    drwxr-xr-x+ 1 Me None   0 Feb 26 18:15 .nw
+    -rw-r--r--  1 Me None   0 Jan 25 01:13 9
+    -rw-r--r--  1 Me None 104 Jan 21 00:37 button
+    -rw-r--r--  1 Me None  73 Jan 20 23:52 description
+    -rw-r--r--  1 Me None  64 Feb  2 02:14 ladder
+    lrwxrwxrwx  1 Me None  22 Apr  2 03:20 u -> ../receivingRoom/e/n/e
+    % ls -lA ~/_/buttonRoom/u/
+    total 4
+    -rw-r--r-- 1 Me None   0 Jan 25 01:05 9
+    lrwxrwxrwx 1 Me None  22 Apr  1 03:30 d -> ../../../../buttonRoom
+    -rw-r--r-- 1 Me None 197 Feb  9 04:02 description
+    -rw-r--r-- 1 Me None  64 Feb  2 02:14 ladder
+    -rw-r--r-- 1 Me None  22 Apr  1 03:31 preserver
+    -rw-r--r-- 1 Me None  38 Jan 21 01:09 weight
+    %
+    
+As you can see, there is now only one button room (no longer two copies of
+the same room). Going down to ladder takes you to ~/_/buttonRoom. Going up the
+ladder takes you back to the weight room. We notice a hidden file .nw, which
+is the begining of the maze. What happens if we drop the weight?:
+    >get lamp
+    Taken.
+    >e
+    Northbound Hallway
+    You are at the south end of a hallway that leads to the north.  There
+    are rooms to the east and west.
+    >n
+    End of N/S Hallway
+    You are at the end of a north/south hallway.  You can go back to the south,
+    or off to a room to the east.
+    >e
+    Weight room
+    You are in an old weight room.  All of the equipment is either destroyed or
+    completely broken.  There is a door out to the west, and there is a ladder
+    leading down a hole in the floor.
+    There is a 10 pound weight here.
+    There is a life preserver here.
+    >get weight
+    Taken.
+    >d
+    Maze button room
+    You are in a maze of twisty little passages, all alike.
+    There is a button on the ground here.
+    >
+
+From the above we see that the get command now takes arguments. (There is also
+"get all", so we won't have "getall" in this new version of the game. The same
+is true of "drop weight" vs "dropweight", as we can see here:
+    % ls -lA 
+    total 7
+    drwxr-xr-x+ 1 Me None   0 Feb 26 18:15 .nw
+    -rw-r--r--  1 Me None   0 Jan 25 01:13 9
+    -rw-r--r--  1 Me None 104 Jan 21 00:37 button
+    -rw-r--r--  1 Me None  73 Jan 20 23:52 description
+    -rw-r--r--  1 Me None  64 Feb  2 02:14 ladder
+    lrwxrwxrwx  1 Me None  22 Apr  2 03:20 u -> ../receivingRoom/e/n/e
+    >u
+    Weight room
+    There is a life preserver here.
+    >d
+    Maze button room
+    There is a button on the ground here.
+    >nw
+    You cannot go that way.
+    >drop weight
+    Done.
+    A passageway opens.
+    >u
+    You cannot go that way.
+    >ls -lA
+    total 8
+    lrwxrwxrwx  1 Me None  22 Apr  2 03:20 .u -> ../receivingRoom/e/n/e
+    -rw-r--r--  1 Me None   0 Jan 25 01:13 1
+    -rw-r--r--  1 Me None 104 Jan 21 00:37 button
+    lrwxrwxrwx  1 Me None   1 Apr  2 05:38 d -> .
+    -rw-r--r--  1 Me None  73 Jan 20 23:52 description
+    lrwxrwxrwx  1 Me None   1 Apr  2 05:38 e -> .
+    -rw-r--r--  1 Me None  64 Feb  2 02:14 ladder
+    lrwxrwxrwx  1 Me None   1 Apr  2 05:38 ne -> .
+    drwxr-xr-x+ 1 Me None   0 Feb 26 18:15 nw
+    lrwxrwxrwx  1 Me None   1 Apr  2 05:38 se -> .
+    lrwxrwxrwx  1 Me None   1 Apr  2 05:38 sw -> .
+    lrwxrwxrwx  1 Me None   1 Apr  2 05:38 w -> .
+    -rw-r--r--  1 Me None  38 Jan 21 01:09 weight
+    >
+    
+OK, so the new links back to its own directory have been added. And the "nw"
+file is no longer hidden -- but now the ".u" file is hidden, instead. If we
+pick up the weight again, the room will revert to its old layout:
+    >get weight
+    Taken.
+    % ls -lA 
+    total 7
+    drwxr-xr-x+ 1 Me None   0 Feb 26 18:15 .nw
+    -rw-r--r--  1 Me None   0 Jan 25 01:13 9
+    -rw-r--r--  1 Me None 104 Jan 21 00:37 button
+    -rw-r--r--  1 Me None  73 Jan 20 23:52 description
+    -rw-r--r--  1 Me None  64 Feb  2 02:14 ladder
+    lrwxrwxrwx  1 Me None  22 Apr  2 03:20 u -> ../receivingRoom/e/n/e
+    >u
+    Weight room
+    There is a life preserver here.
+    >get preserver
+    Your load would be too heavy.
+    >x preserver
+    It says S. S. Minnow.
+    >
+From the above, we also see that I've fixed the preserver's text. And we've
+implemented the game's weight restriction.
+
+Let's get the items that are placed in the maze:
+    >d
+    Maze button room
+    There is a button on the ground here.
+    >drop weight
+    Done.
+    A passageway opens.
+    >nw
+    Maze
+    You are in a maze of little twisty passages, all alike.
+    >u
+    Maze 
+    You are in a maze of thirsty little passages, all alike.
+    There is a floppy disk here.
+    There is a wax statuette of Richard Stallman here.
+    >get all
+    A floppy disk: Taken.
+    An RMS statuette: Taken.
+    >
+So we have gotten those two items out of the maze, and then we have teleported
+to our start directory. From the above, we also notice that the display for
+"get all" says ":Taken" at the end of the line instead of saying "Taken: " at
+the beginning. The object descriptions are also corrected (eg, "A floppy disk",
+not "A floppy", as in the last homework). The output is now like the real game.
+
+The reason the we got these two items is that they react to the sauna:
+    >cd ~/_/receivingRoom
+    >e
+    Northbound Hallway
+    You are at the south end of a hallway that leads to the north.  There
+    are rooms to the east and west.
+    >drop floppy
+    Done.
+    >e
+    Sauna
+    You are in a sauna.  There is nothing in the room except for a dial
+    on the wall.  A door leads out to west.
+    It is normal room temperature in here.
+    >drop rms
+    Done.
+    >turn
+    You must supply an object.
+    >turn rms
+    You can't turn that.
+    >i
+    You currently have:
+    A lamp
+    >turn lamp
+    I don't see that here.
+    >
+From the above we see that "turn" can only find objects in the room, not in the
+inventory. We also see that the command requires an object.
+
+Turn also knows the difference between real objects that aren't in the room, as
+compared to words that are not objects in the game:
+    >turn button
+    I don't see that here.
+    >turn around
+    I don't know what that is.
+    >turn description
+    I don't know what that is.
+    >turn 1
+    I don't know what that is.
+    >ls
+    1  description  dial  diamond  temperature2
+    >
+Note that "description" and "1" are files in this directory (just like there
+are files for "dial" and the "rms" statuette). Nonetheless, the words "1" and
+"description" are not game objects, so our script knows they aren't objects. 
+
+Actually, there is only one object that is able to be turned:
+    >turn dial
+    You must indicate clockwise or counterclockwise.
+    >turn clockwise
+    I don't know what that is.
+    >turn dial clockwise
+    It is now luke warm in here. You are perspiring.
+    >
+
+So now it is hotter. Let's try it out more:
+    >ls
+    1  description  dial  diamond  temperature3
+    >turn dial counterclockwise
+    The temperature has returned to normal room temperature.
+    >ls
+    1  description  dial  diamond  temperature2
+    >turn dial counterclockwise
+    The dial will not turn further in that direction.
+    >ls
+    1  description  dial  diamond  temperature2
+    >w
+    Northbound Hallway
+    There is a floppy disk here.
+    >e
+    Sauna
+    There is a wax statuette of Richard Stallman here.
+    It is normal room temperature in here.
+    >turn dial clockwise
+    It is now luke warm in here. You are perspiring.
+    >turn dial clockwise
+    It is pretty hot in here. It is still very comfortable.
+    >w
+    Northbound Hallway
+    There is a floppy disk here.
+    >
+
+Now, if we turn the dial just one more time, something will happen:
+    >e
+    Sauna
+    There is a wax statuette of Richard Stallman here.
+    It is comfortably hot in here.
+    >turn dial clockwise
+    It is now very hot. There is something very refreshing about this.
+    You notice the wax on your statuette beginning to melt, until it completely
+    melts off.  You are left with a beautiful diamond!
+    >l
+    Sauna
+    You are in a sauna.  There is nothing in the room except for a dial
+    on the wall.  A door leads out to west.
+    There is a shimmering diamond here.
+    It is refreshingly hot in here.
+    >x diamond
+    I see nothing special about that.
+    >
+    
+So the wax statuette, which had been lying on the sauna's floor, has melted and
+left a diamond. And objects you are carrying are also affected by the heat:
+    >w
+    Northbound Hallway
+    There is a floppy disk here.
+    >get floppy
+    Taken.
+    >e
+    Sauna
+    There is a shimmering diamond here.
+    It is refreshingly hot in here.
+    You notice your floppy disk beginning to melt. As you grab for it, the
+    disk bursts into flames, and disintegrates.
+    >i
+    You currently have:
+    A lamp
+    >
+Only the floppy disk and the wax statuette react to the heat.
+
+Now if we turn up the heat one more time, then we will die:
+    >ls
+    1  description  dial  diamond  temperature5
+    >turn dial clockwise
+    As the dial clicks into place, you immediately burst into flames.
+    
+    You are dead.
+    You have scored 0 points.
+    %
+
+There is another way for the sauna to kill us:
+    Receiving room
+    You are in a round, stone room with a door to the east.  There
+    is a sign on the wall that reads: ‘receiving room’.
+    There is a lamp nearby.
+    There is a shiny brass key here.
+    There is a shovel here.
+    There is a slip of paper here.
+    There is an axe here.
+    There is an emerald bracelet here.
+    >get lamp
+    Taken.
+    >cd ../buttonRoom/.nw/u
+    >get rms
+    Taken.
+    >cd -
+    /home/Me/PA3/rooms/receivingRoom
+    >e
+    Northbound Hallway
+    You are at the south end of a hallway that leads to the north.  There
+    are rooms to the east and west.
+    >e
+    Sauna
+    You are in a sauna.  There is nothing in the room except for a dial
+    on the wall.  A door leads out to west.
+    It is normal room temperature in here.
+    >turn dial
+    You must indicate clockwise or counterclockwise.
+    >turn clockwise
+    I don't know what that is.
+    >turn dial clockwise
+    It is now luke warm in here. You are perspiring.
+    >turn dial clockwise
+    It is pretty hot in here. It is still very comfortable.
+    You notice the wax on your statuette beginning to melt, until it completely
+    melts off.  You are left with a beautiful diamond!
+    >ls
+    1  description  dial  temperature5
+    >cd ../../../buttonRoom/.nw/u/se/d/nw/nw/s/s
+    >l
+    Lakefront North
+    You are at the north side of a lake.  On the other side you can see
+    a road which leads to a cave.  The water appears very deep.
+    >n
+    Health Club front
+    You are outside a large building to the north which used to be a health
+    and fitness center.  A road leads to the south.
+    >n
+    Reception area
+    You are in a reception area for a health and fitness center.  The place
+    appears to have been recently ransacked, and nothing is left.  There is
+    a door out to the south, and a crawlspace to the southeast.
+    >s
+    As you exit the building, you notice some flames coming out of one of the
+    windows.  Suddenly, the building explodes in a huge ball of fire.  The
+    flames engulf you, and you burn to death.
+    
+    You are dead.
+    You have scored 0 points.
+    % ls ~/_/receivingRoom/e/e
+    1  description  dial  temperature5
+    %
+
+Aside from the hazard of exiting building, this new area has several other
+dangers. Death can come by water or falling, just as much as it may by fire:
+    Receiving room
+    You are in a round, stone room with a door to the east.  There
+    is a sign on the wall that reads: ‘receiving room’.
+    There is a lamp nearby.
+    There is a shiny brass key here.
+    There is a shovel here.
+    There is a slip of paper here.
+    There is an axe here.
+    There is an emerald bracelet here.
+    >cd e/n/e
+    >ls
+    9  d  description  ladder  preserver  weight
+    >get preserver
+    Taken.
+    >cd ../../../../buttonRoom/.nw/u/se/d/nw/nw/s/s
+    >l
+    Lakefront North
+    You are at the north side of a lake.  On the other side you can see
+    a road which leads to a cave.  The water appears very deep.
+    >i
+    You currently have:
+    A preserver
+    >s
+    Lakefront South
+    You are at the south side of a lake.  A road goes to the south.
+    >n
+    Lakefront North
+    >s
+    Lakefront South
+    >drop preserver
+    Done.
+    >n
+    You dive in the water, and at first notice it is quite cold.  You then
+    start to get used to it as you realize that you never really learned how
+    to swim.
+    
+    You are dead.
+    You have scored 0 points.
+    %
+Crossing the lake in either direction without a life preserver means death.
+
+But I also promised death by falling:
+    Receiving room
+    You are in a round, stone room with a door to the east.  There
+    is a sign on the wall that reads: ‘receiving room’.
+    There is a lamp nearby.
+    There is a shiny brass key here.
+    There is a shovel here.
+    There is a slip of paper here.
+    There is an axe here.
+    There is an emerald bracelet here.
+    >cd ../buttonRoom/.nw/u/se/d/nw/nw/s/s
+    >l
+    Lakefront North
+    You are at the north side of a lake.  On the other side you can see
+    a road which leads to a cave.  The water appears very deep.
+    >n
+    Health Club front
+    You are outside a large building to the north which used to be a health
+    and fitness center.  A road leads to the south.
+    >n
+    It is pitch dark.  You are likely to be eaten by a grue.
+    >l
+    It is pitch dark.  You are likely to be eaten by a grue.
+    >s
+    You trip over a grue and fall into a pit and break every bone in your
+    body.
+    You are dead.
+    You have scored 0 points.
+    %
+The problem was that I did not have the lamp. As you see, once we get a warning
+about grue, we will die as soon as we move (whether that move is valid or not).
+We can't even use "l", but we can examine objects. This behavior is all
+identical to the original game.
+
+It turns out that all of the health center, after the first to rooms is dark,
+and has the danger of a grue:
+    % bash
+    % source ~/PA3/PA3.sh
+    Receiving room
+    You are in a round, stone room with a door to the east.  There
+    is a sign on the wall that reads: ‘receiving room’.
+    There is a lamp nearby.
+    There is a shiny brass key here.
+    There is a shovel here.
+    There is a slip of paper here.
+    There is an axe here.
+    There is an emerald bracelet here.
+    There is an emerald bracelet here.
+    >e
+    Northbound Hallway
+    You are at the south end of a hallway that leads to the north.  There
+    are rooms to the east and west.
+    >e
+    It is pitch dark.  You are likely to be eaten by a grue.
+    >x lamp
+    cat: lamp: No such file or directory
+    >x dial
+    The dial points to a temperature scale which has long since faded away.
+    >l
+    It is pitch dark.  You are likely to be eaten by a grue.
+    >w
+    You trip over a grue and fall into a pit and break every bone in your
+    body. 
+    You are dead.
+    You have scored 0 points.
+    %
+
+Let's explore the grue's behavior more:
+    % bash
+    % source ~/PA3/PA3.sh
+    Receiving room
+    You are in a round, stone room with a door to the east.  There
+    is a sign on the wall that reads: ‘receiving room’.
+    There is a lamp nearby.
+    There is a shiny brass key here.
+    There is a shovel here.
+    There is a slip of paper here.
+    There is an axe here.
+    There is an emerald bracelet here.
+    >get lamp
+    Taken.
+    >e
+    Northbound Hallway
+    You are at the south end of a hallway that leads to the north.  There
+    are rooms to the east and west.
+    >e
+    Sauna
+    You are in a sauna.  There is nothing in the room except for a dial
+    on the wall.  A door leads out to west.
+    It is normal room temperature in here.
+    >drop lamp
+    Done.
+    >w
+    Northbound Hallway
+    >w
+    Receiving room
+    There is a shiny brass key here.
+    There is a shovel here.
+    There is a slip of paper here.
+    There is an axe here.
+    There is an emerald bracelet here.
+    >e
+    Northbound Hallway
+    >e
+    Sauna
+    There is a lamp nearby.
+    It is normal room temperature in here.
+    >w
+    Northbound Hallway
+    >n
+    It is pitch dark.  You are likely to be eaten by a grue.
+    >s
+    You trip over a grue and fall into a pit and break every bone in your
+    body. 
+    You are dead.
+    You have scored 0 points.
+    %
+From the above, we see that the lamp can light up a room by being on the floor
+or by being in the inventory.
+
+This leads to different death cases: walking forward into a dark room, back-
+tracking into a dark room, and entering the locked gamma center when it's dark.
+Here is a moving forward death:
+    % bash
+    % source ~/PA3/PA3.sh
+    Receiving room
+    You are in a round, stone room with a door to the east.  There
+    is a sign on the wall that reads: ‘receiving room’.
+    There is a lamp nearby.
+    There is a shiny brass key here.
+    There is a shovel here.
+    There is a slip of paper here.
+    There is an axe here.
+    There is an emerald bracelet here.
+    >get lamp
+    Taken.
+    >e
+    Northbound Hallway
+    You are at the south end of a hallway that leads to the north.  There
+    are rooms to the east and west.
+    >n
+    End of N/S Hallway
+    You are at the end of a north/south hallway.  You can go back to the south,
+    or off to a room to the east.
+    >drop lamp
+    Done.
+    >s
+    Northbound Hallway
+    >w
+    Receiving room
+    There is a shiny brass key here.
+    There is a shovel here.
+    There is a slip of paper here.
+    There is an axe here.
+    There is an emerald bracelet here.
+    >e
+    Northbound Hallway
+    >n
+    End of N/S Hallway
+    There is a lamp nearby.
+    >e
+    It is pitch dark.  You are likely to be eaten by a grue.
+    >n
+    You trip over a grue and fall into a pit and break every bone in your
+    body. 
+    You are dead.
+    You have scored 0 points.
+    %
+
+Here is a backtracking death:
+    % bash
+    % source ~/PA3/PA3.sh
+    Receiving room
+    You are in a round, stone room with a door to the east.  There
+    is a sign on the wall that reads: ‘receiving room’.
+    There is a lamp nearby.
+    There is a shiny brass key here.
+    There is a shovel here.
+    There is a slip of paper here.
+    There is an axe here.
+    There is an emerald bracelet here.
+    >get lamp
+    Taken.
+    >e
+    Northbound Hallway
+    You are at the south end of a hallway that leads to the north.  There
+    are rooms to the east and west.
+    >n
+    End of N/S Hallway
+    You are at the end of a north/south hallway.  You can go back to the south,
+    or off to a room to the east.
+    >e
+    Weight room
+    You are in an old weight room.  All of the equipment is either destroyed or
+    completely broken.  There is a door out to the west, and there is a ladder
+    leading down a hole in the floor.
+    There is a 10 pound weight here.
+    There is a life preserver here.
+    >drop lamp
+    Done.
+    >w
+    It is pitch dark.  You are likely to be eaten by a grue.
+    >x ladder
+    cat: ladder: No such file or directory
+    >s
+    You trip over a grue and fall into a pit and break every bone in your
+    body. 
+    You are dead.
+    You have scored 0 points.
+    %
+
+And now let's look at that locked door to the Gamma Computing Center. To begin,
+note that the cave is, of course, dark:
+    % bash
+    % source ~/PA3/PA3.sh
+    Receiving room
+    You are in a round, stone room with a door to the east.  There
+    is a sign on the wall that reads: ‘receiving room’.
+    There is a lamp nearby.
+    There is a shiny brass key here.
+    There is a shovel here.
+    There is a slip of paper here.
+    There is an axe here.
+    There is an emerald bracelet here.
+    >cd ~/_/buttonRoom/nw/u/se/d/nw/nw/s/s/s
+    >l
+    Lakefront South
+    You are at the south side of a lake.  A road goes to the south.
+    >s
+    Cave Entrance
+    The entrance to a cave is to the south.  To the north, a road leads
+    towards a deep lake.  On the ground nearby there is a chute, with a sign
+    that says ‘put treasures here for points’.
+    >s
+    It is pitch dark.  You are likely to be eaten by a grue.
+    >x gold
+    I see nothing special about that.
+    >e
+    You trip over a grue and fall into a pit and break every bone in your
+    body. 
+    You are dead.
+    You have scored 0 points.
+    %
+(Besides everything in the cave being dark, so is everything inside the health
+center -- except the first two rooms, "receivingRoom" and "receivingRoom/e".)
+
+The locked door to the gamma computing center is, in fact, in the cave. So it
+also dark:
+    % bash
+    % source ~/PA3/PA3.sh
+    Receiving room
+    You are in a round, stone room with a door to the east.  There
+    is a sign on the wall that reads: ‘receiving room’.
+    There is a lamp nearby.
+    There is a shiny brass key here.
+    There is a shovel here.
+    There is a slip of paper here.
+    There is an axe here.
+    There is an emerald bracelet here.
+    >get lamp
+    Taken.
+    >cd ../mistyRoom/e/e
+    >l
+    N/S/W Junction
+    You are at the junction of two passages. One goes north/south, and
+    the other goes west.
+    >n
+    North end of cave passage
+    You are at the north end of a north/south passageway.  There are stairs
+    leading down from here.  There is also a door leading west.
+    >w
+    You must type a 3 digit combination code to enter this room.
+    Enter it here: 333
+    Sorry, that combination is incorrect.
+    >
+
+So what is the combination? We'll find out later. For now, I'll just use "???":
+    >w
+    You must type a 3 digit combination code to enter this room.
+    Enter it here: ???
+    Gamma computing center
+    You are in the Gamma Computing Center.  An IBM 3090/600s is whirring
+    away in here.  There is an ethernet cable coming out of one of the units,
+    and going through the ceiling.  There is no console here on which you
+    could type.
+    >e
+    North end of cave passage
+    >w
+    You must type a 3 digit combination code to enter this room.
+    Enter it here: 333
+    Sorry, that combination is incorrect.
+    >
+So we see that the door closes automatically when we leave.
+
+Now let's use our lamp:
+    >drop lamp
+    Done.
+    >l
+    North end of cave passage
+    You are at the north end of a north/south passageway.  There are stairs
+    leading down from here.  There is also a door leading west.
+    There is a lamp nearby.
+    >w
+    You must type a 3 digit combination code to enter this room.
+    Enter it here: ???
+    It is pitch dark.  You are likely to be eaten by a grue.
+    >x cable
+    I see nothing special about that.
+    >e
+    You trip over a grue and fall into a pit and break every bone in your
+    body.
+    You are dead.
+    You have scored 0 points.
+    %
+Yes, the dark computer room is dangerous.
+
+Let's see about the opposite case of dropping the lamp inside the Gamma Center:
+    % bash
+    % source ~/PA3/PA3.sh
+    Receiving room
+    You are in a round, stone room with a door to the east.  There
+    is a sign on the wall that reads: ‘receiving room’.
+    There is a lamp nearby.
+    There is a shiny brass key here.
+    There is a shovel here.
+    There is a slip of paper here.
+    There is an axe here.
+    There is an emerald bracelet here.
+    >get lamp
+    Taken.
+    >cd ../mistyRoom/e/e
+    >n
+    North end of cave passage
+    You are at the north end of a north/south passageway.  There are stairs
+    leading down from here.  There is also a door leading west.
+    >w
+    You must type a 3 digit combination code to enter this room.
+    Enter it here: ???
+    Gamma computing center
+    You are in the Gamma Computing Center.  An IBM 3090/600s is whirring
+    away in here.  There is an ethernet cable coming out of one of the units,
+    and going through the ceiling.  There is no console here on which you
+    could type.
+    >drop lamp
+    Done.
+    >e
+    It is pitch dark.  You are likely to be eaten by a grue.
+    >cat cable
+    cat: cable: No such file or directory
+    >s
+    You trip over a grue and fall into a pit and break every bone in your
+    body.
+    You are dead.
+    You have scored 0 points.
+    %
+    
+Death by fire. Death by water. Death by falling. This programming assignment is
+really killing me! What's left, bleeding to death?
+    % bash
+    % source ~/PA3/PA3.sh
+    Receiving room
+    You are in a round, stone room with a door to the east.  There
+    is a sign on the wall that reads: ‘receiving room’.
+    There is a lamp nearby.
+    There is a shiny brass key here.
+    There is a shovel here.
+    There is a slip of paper here.
+    There is an axe here.
+    There is an emerald bracelet here.
+    >get axe
+    Taken.
+    >break axe
+    You take the object in your hands and swing the axe.  Unfortunately, you miss
+    the object and slice off your hand.  You bleed to death.
+    
+    You are dead.
+    You have scored 0 points.
+    %
+
+I promise, there are no other ways to die. But let's consider the break command
+further:
+    % bash
+    % source ~/PA3/PA3.sh
+    Receiving room
+    You are in a round, stone room with a door to the east.  There
+    is a sign on the wall that reads: ‘receiving room’.
+    There is a lamp nearby.
+    There is a shiny brass key here.
+    There is a shovel here.
+    There is a slip of paper here.
+    There is an axe here.
+    There is an emerald bracelet here.
+    >break
+    You have nothing you can use to break things.
+    >break paper
+    You have nothing you can use to break things.
+    >get axe
+    Taken.
+    >break
+    You must supply an object.
+    >break paper
+    Your axe breaks it into a million pieces.
+    >get all
+    A bracelet: Taken.
+    A brass key: Taken.
+    A lamp: Taken.
+    A shovel: Taken.
+    >l
+    Receiving room
+    You are in a round, stone room with a door to the east.  There
+    is a sign on the wall that reads: ‘receiving room’.
+    >e
+    Northbound Hallway
+    You are at the south end of a hallway that leads to the north.  There
+    are rooms to the east and west.
+    >n
+    End of N/S Hallway
+    You are at the end of a north/south hallway.  You can go back to the south,
+    or off to a room to the east.
+    >e
+    Weight room
+    You are in an old weight room.  All of the equipment is either destroyed or
+    completely broken.  There is a door out to the west, and there is a ladder
+    leading down a hole in the floor.
+    There is a 10 pound weight here.
+    There is a life preserver here.
+    >break preserver
+    Your axe breaks it into a million pieces.
+    >l
+    Weight room
+    You are in an old weight room.  All of the equipment is either destroyed or
+    completely broken.  There is a door out to the west, and there is a ladder
+    leading down a hole in the floor.
+    There is a 10 pound weight here.
+    >break dial
+    I don't see that here.
+    >x ladder
+    It is a normal ladder that is permanently attached to the hole.
+    >break ladder
+    Your axe shatters into a million pieces.
+    >break weight
+    You have nothing you can use to break things.
+    >i
+    You currently have:
+    A bracelet
+    A key
+    A lamp
+    A shovel
+    >echo "new axe" > ~/_/i/i/axe
+    >i
+    You currently have:
+    A axe
+    A bracelet
+    A key
+    A lamp
+    A shovel
+    >break weight
+    Your axe breaks it into a million pieces.
+    >l
+    Weight room
+    You are in an old weight room.  All of the equipment is either destroyed or
+    completely broken.  There is a door out to the west, and there is a ladder
+    leading down a hole in the floor.
+    >break lamp
+    You take the object in your hands and swing the axe.  Unfortunately, you miss
+    the object and slice off your hand.  You bleed to death.
+    
+    You are dead.
+    You have scored 0 points.
+    >
+So, as you can see, you die if you try to break with the axe anything that you
+are holding.
+
+The axe has an intended use of completing the level:
+    % bash
+    % source ./PA3.sh
+    Receiving room
+    You are in a round, stone room with a door to the east.  There
+    is a sign on the wall that reads: ‘receiving room’.
+    There is a lamp nearby.
+    There is a shiny brass key here.
+    There is a shovel here.
+    There is a slip of paper here.
+    There is an axe here.
+    There is an emerald bracelet here.
+    >get lamp
+    Taken.
+    >e
+    Northbound Hallway
+    You are at the south end of a hallway that leads to the north.  There
+    are rooms to the east and west.
+    n
+    >n
+    End of N/S Hallway
+    You are at the end of a north/south hallway.  You can go back to the south,
+    or off to a room to the east.
+    >e
+    Weight room
+    You are in an old weight room.  All of the equipment is either destroyed or
+    completely broken.  There is a door out to the west, and there is a ladder
+    leading down a hole in the floor.
+    There is a 10 pound weight here.
+    There is a life preserver here.
+    >get all
+    Your load would be too heavy.
+    >get weight
+    Taken.
+    >get preserver
+    Your load would be too heavy.
+    >l
+    Weight room
+    You are in an old weight room.  All of the equipment is either destroyed or
+    completely broken.  There is a door out to the west, and there is a ladder
+    leading down a hole in the floor.
+    There is a life preserver here.
+    >
+From the above, we see that we now have the game's weight restriction.
+
+Well, let's play through:
+    >d
+    Maze button room
+    You are in a maze of twisty little passages, all alike.
+    There is a button on the ground here.
+    >u
+    Weight room
+    There is a life preserver here.
+    >d
+    Maze button room
+    There is a button on the ground here.
+    >nw
+    You cannot go that way.
+    >drop weight
+    Done.
+    A passageway opens.
+    >u
+    You cannot go that way.
+    >d
+    Maze button room
+    There is a 10 pound weight here.
+    There is a button on the ground here.
+    >nw
+    Maze
+    You are in a maze of little twisty passages, all alike.
+    >u
+    Maze 
+    You are in a maze of thirsty little passages, all alike.
+    There is a floppy disk here.
+    There is a wax statuette of Richard Stallman here.
+    >get all
+    A floppy disk: Taken.
+    An RMS statuette: Taken.
+    >se
+    Maze  
+    You are in a maze of twenty little passages, all alike.
+    >d
+    Maze   
+    You are in a daze of twisty little passages, all alike.
+    >nw
+    Maze    
+    You are in a maze of twisty little cabbages, all alike.
+    >ne
+    Weight room
+    There is a life preserver here.
+    >get all
+    A life preserver: Taken.
+    >d
+    Maze button room
+    There is a 10 pound weight here.
+    There is a button on the ground here.
+    >nw
+    Maze
+    >u
+    Maze 
+    >se
+    Maze  
+    >d
+    Maze   
+    >nw
+    Maze    
+    >nw
+    Reception area
+    You are in a reception area for a health and fitness center.  The place
+    appears to have been recently ransacked, and nothing is left.  There is
+    a door out to the south, and a crawlspace to the southeast.
+    >s
+    Health Club front
+    You are outside a large building to the north which used to be a health
+    and fitness center.  A road leads to the south.
+    >s
+    Lakefront North
+    You are at the north side of a lake.  On the other side you can see
+    a road which leads to a cave.  The water appears very deep.
+    >s
+    Lakefront South
+    You are at the south side of a lake.  A road goes to the south.
+    >s
+    Cave Entrance
+    The entrance to a cave is to the south.  To the north, a road leads
+    towards a deep lake.  On the ground nearby there is a chute, with a sign
+    that says ‘put treasures here for points’.
+    >s
+    Misty Room
+    You are in a misty, humid room carved into a mountain.
+    To the north is the remains of a rockslide.  To the east, a small
+    passage leads away into the darkness.
+    There is a gold bar here.
+    >e
+    Cave E/W passage
+    You are in an east/west passageway.  The walls here are made of
+    multicolored rock and are quite beautiful.
+    >e
+    N/S/W Junction
+    You are at the junction of two passages. One goes north/south, and
+    the other goes west.
+    >n
+    North end of cave passage
+    You are at the north end of a north/south passageway.  There are stairs
+    leading down from here.  There is also a door leading west.
+    >w
+    You must type a 3 digit combination code to enter this room.
+    Enter it here: ???
+    Gamma computing center
+    You are in the Gamma Computing Center.  An IBM 3090/600s is whirring
+    away in here.  There is an ethernet cable coming out of one of the units,
+    and going through the ceiling.  There is no console here on which you
+    could type.
+    >cut cable
+    cut: you must specify a list of bytes, characters, or fields
+    Try 'cut --help' for more information.
+    >break cable
+    As you break the ethernet cable, everything starts to blur.  You collapse
+    for a moment, then straighten yourself up.
+
+    Connection closed.
+    $
+    You have scored 0 points.
+    %
+From the above, we see that "cut" is not a synonym for "break", unlike in the
+real game (because UNIX already has a "cut" command).
+
+When you get to this point in the game, it begins a new, weird level that we
+will look at in the next homework.
+
+I will be posting additional help files later. But I am posting this to let you
+get started, because it is a long assignment...

@@ -1,0 +1,130 @@
+                            Unix System Programming
+                           Programming Assignment #3
+
+Due date: Friday, April 16, at 11:59pm
+
+Submission method: On the cyberuniversity, like the previous assignments.
+
+Submission requirements: You must submit exactly one file, named "PA3.tar".
+           This tar file will contain inside of it a directory named PA3, and
+           that PA3 directory will contain the files:
+                cantmove, get, drop, turn, and break.
+		
+           I do not care if that directory also contains other files besides
+           the five just listed. So you can just tar-up your PA3 directory,
+           including the rooms subdirectory and all of the files I've given
+           you, such as this file that you are currently reading.
+           Although I don't care about extra files, I do not huge submissions.
+           So I require that no individual file can be larger than 50 Kbytes,
+           with the exception of the rooms.tar file.
+
+Assignment Overview: In the previous programming assignment, we took a first
+           step toward programming the dunnet game. But there were limitations.
+           In this new version:
+            - We will allow commands to receive arguments.
+            - We will also introduce the turn and break commands.
+            - We will improve movement to accommodate the locked door.
+            - We will implement all of the death scenarios from this part of
+              the original game.
+            - We will not fix everything about the game. For example, the "x"
+              and "press" commands still don't work perfectly with arguments.
+              Commands like these could easily be fixed in the same way that
+              we have used for fixing commands like "get". But, for now, I have
+              left them with the same implementation that they had in the last
+              programming assignment.
+ 
+Let's now see what files have been provided. If you are reading this current
+README file, then you must have untarred Programming Assignment #3's tar file.
+Looking in that directory, you will see:
+    % ls
+    GradingPolicy.txt            README                      rooms.tar
+    ImplementationGuideBase.txt  TestingGuide.txt            savedgame
+    ImplementationGuideFull.txt  break2                      testInput.sh
+    NewWalkthrough.txt           checkYourOutput.sh          turn2
+    OldnewWalkthrough.txt        expectedOutput.txt
+    PA3.sh                       explanatoryWalkthrough.txt
+    %
+
+The explanatoryWalkthrough.txt and savedgame files are exactly as provided in
+the previous homeworks. The GradingPolicy.txt file is also very similar to
+previous homeworks, but it is updated slightly. The rooms.tar file is also
+very similar.
+
+The PA3.sh file is almost the same as what was posted last week. The only
+change is that I fixed a bug in the wildcard pattern used for "put". (It is
+now "??[al]*" which is the simplest way to map to all five treasures: gold,
+bracelet, diamond, silver, and platinum.) The PA3.sh script invokes two other
+scripts that I also gave you last week: break2 and turn2. These are very simple
+wrappers that go around two of the scripts that you will need to write:
+    % egrep "break2|turn2" PA3.sh
+    alias turn='source ~/PA3/turn2'
+    alias break='source ~/PA3/break2'
+    % cat break2 turn2
+    ~/PA3/break $* && quit
+    ~/PA3/turn $* && quit
+    %
+
+Last week, I also gave you the files: rooms.tar and newWalkthrough.txt. These
+files now have updated versions. For rooms.tar, I fixed the problem of the
+button displaying each time you entered the maze room. For the walkthrough,
+the changes are a bit more, so I have provided the original version (now named
+"OldnewWalkthrough.txt") as well as the updated one "NewWalkthrough.txt". With
+both versions, you can run "diff -c OldnewWalkthrough.txt newWalkthrough.txt"
+to see what changed. The walkthrough shows and explains the expected behavior.
+
+The testInput.sh file provides the basic test necessary to earn a 50%. The
+expectedOutput.txt file shows the corresponding output. The checkYourOutput.sh
+script can be used to see if you've passed the basic test. And TestingGuide.txt
+explains how to run this basic-performance test. You need to read this guide,
+because you need to create files named "comb.right" and "comb.wrong" before you
+can run the checkYourOutput.sh script. TestingGuide.txt explains about this.
+
+ImplementationGuideBase.txt describes the implementation of a basic version of
+the game that is able to pass the checkYourOutput.sh test. This guide to the
+basic implementation is carefully designed so that the lines of code that you
+write for this part will also work in the full part that you have to do next.
+That is to say: in order to get the basic test to work, certain lines of code
+must be implemented, while other lines can be skipped. All of the lines that
+you implement for the basic version can then be reused in the full version
+described in ImplementationGuideFull.txt. Only the skipped lines need to be
+added into your scripts.
+
+Having finished this README file, you should next look at NewWalkthrough.txt.
+If you have already done so (I hope you have), then use diff, to see which
+small parts were updated from the earlier posting. When you finish reading the
+walkthrough, also look at expectedOutput.txt, to see which parts are required
+in the basic test.
+
+When you finish reading the walkthrough, next study carefully the behavior of
+PA3.sh (but you should already have done that, as it was posted last week). In
+particular, notice: 1) the wildcard patterns and 2) the situations in which
+the five scripts that you need to write get executed. (When I say "situation",
+I mean: Under what conditions does it execute? With what arguments? Does it
+need to return any specific value for the PA3.sh script to work correctly?)
+
+As for understanding the wildcard patterns, you can go to the ~/_/filenamesdir
+directly and type ls <pattern>. See if all of the correct files display. (Note
+that some "incorrect" files might also display -- if those files could never be
+in the place where the pattern is used. For example the ??[al]* pattern used by
+"put" matches to dial, but the dial is not a gettable object, so it won't be in
+the inventory, so the put command can safely use ??[al]*.) There are 3 reasons
+to study the wildcard patterns of PA3.sh: 1) to learn more of how such patterns
+work, 2) to possibly reuse some of these patterns in the scripts that you need
+to write for this homework, and 3) to get familiar with using the filenamesdir
+directory to test your own patterns.
+
+Once you have understood how the PA3.sh script is working, next go on to read
+GradingPolicy.txt, so that you understand what is required of you, and what
+the policy is for cheating.
+
+Next after that, read ImplementationGuideBase.txt. As you try implementing it,
+also read TestingGuide.txt, so that you can see how to pass the 50% basic test.
+(When you do pass the test, save a back-up copy of your solution, just in case
+you do something later that either erases it by mistake or that breaks it.)
+
+After you pass the basic test, go on to read ImplementationGuideFull.txt, and
+implement it. You can write your own testInput.sh scripts, to see if the output
+is working.
+
+Please start early, because this is not an easy assignment, and the deadline
+cannot be extended (since there is a midterm on Monday April 19th).

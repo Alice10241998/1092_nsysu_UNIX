@@ -1,0 +1,29 @@
+#!/usr/bin/tcsh
+#set echo
+set cutfl = "c1-4 --complement"
+if (-e w && $1 == w ) then
+   echo "You must type a 3 digit combination code to enter this room."
+   echo -n "Enter it here: "
+   set key = $<
+   if ($key == `tr "a-zA-Z" "n-za-mN-ZA-M" < ~/PA3/savedgame | grep combination | cut -c 24-26` ) then
+      chmod 755 w
+      cd w
+      if (! -e ~/_/i/i/lamp) then
+         grep ~/PA3/expl*Walkthrough.txt -e likely | cut -$cutfl|tee de*
+	 exit 1
+      endif
+    else
+	echo Sorry, that combination is incorrect. && exit 0
+    endif
+
+else if (-d $1 || -l $1 ) then
+    echo You cannot go that way. && exit 0
+
+else
+    basename `pwd` | tr "neswud" "swnedu" | grep -vw $1 >& /dev/null && echo You cannot go that way. && exit 0
+    cd ..
+endif
+
+head -n `ls [19]` de* && mv 9 1 >&~/X
+grep -hw `ls -d * | paste ~/_/es -` -h ~/_/T*|cut -d\; -f1
+exit 3

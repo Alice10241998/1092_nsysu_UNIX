@@ -1,0 +1,12 @@
+As stated in the earlier README, the due date is April 16th and cannot be
+changed because students need time to study the solution before the midterm.
+
+But I thought of a compromise solution. The assignment can be broken into two
+parts. So the homework due this Friday will not include the turn script. And
+it will not test behaviors different than the testInput2.sh script that I have
+also provided to you in this new tar file. (What makes it new is that all of
+the "turn" commands have been removed.)
+
+In addition, I have provided an even smaller test, the new testInput.sh. This
+smaller test is the one that is required for a score of 50%. This test does not
+involve the grue or going down the hole to the bathroom.
