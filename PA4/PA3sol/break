@@ -1,0 +1,21 @@
+#!/usr/bin/tcsh
+
+#Case 1:
+if ( ! -e ~/_/i/i/axe ) then
+   echo You have nothing you can use to break things.
+
+#Case 4:
+else if ( ( ! -e $1 ) && ( ! -e ~/_/i/i/$1 ) ) then
+   echo I don\'t see that here.
+#Case 5:
+   else if ( ( -e $1 ) && ($1 =~ *[aworkv][maxslept]*[mykdrslept] ) ) then
+   echo Your axe breaks it into a million pieces.
+   rm $1
+#Case 6:
+   else if ( $1 == cable ) then
+   echo "As you break the ethernet cable, everything starts to blur.  You collapse@for a moment, then straighten yourself up.@@Connection closed."|tr @ \\n
+   exit 0
+
+#End:
+endif
+exit 1

@@ -1,0 +1,147 @@
+#!/usr/bin/tcsh
+#Section 1. Fill in the __1__ (both places) with a test for no arguments.
+if ( __1__ ) echo You must supply an object.
+if ( __1__ ) exit
+
+
+#Section 2. This section deals with synonyms that are allowed in the real game.
+#So if the first argument ($1) is "emerald", change it to "bracelet". If it is
+#"life", change it to "preserver". If it is "disk", change it to floppy. If it
+#is either "Stallman", "stallman", "statue", or "statuette", change to "rms". 
+#Note that, in our implementation, anything beginning with "statue" must be
+#changed (so, for example, "statueABC123" would also become "rms").
+...
+
+
+#Section 3. This section copies all getable objects in the room into ~/_/i/_
+#This requires a wildcard pattern for all gettable objects. But we already have
+#that pattern, from the PA3 solution (so there's nothing for you to do):
+# % cat ~/PA3sol/break | sed -n '11s/.*~ \([^ ]*\).*/\1/p'
+# *[aworkv][maxslept]*[mykdrslept]
+# %
+cp *[aworkv][maxslept]*[mykdrslept] ~/_/i/_ >& ~/X
+
+
+#Section 4. This section tests if $1 is "all". But remember: unexpected inputs
+#can be given by the player, and should not break the game.
+if ( __2__ ) then
+   rm *[arokvw][xaslempt]*[etdyprmlsk] >& ~/X || echo Nothing to take.
+#  At this point the getable objects are only in ~/_/i/_. There are now three
+#  possibilities: 1)That there are no gettable objects (ie, ~/_/i/_ is empty),
+#  2)That they weigh too much (in which case we need to move them all back to
+#  to the current room), or 3)That they don't weigh too much (in which case we
+#  to move them from ~/_/i/_ to ~/_/i/i).
+#
+#  Later in Section X, we'll handle cases 2&3. Right now we just do case 1: 
+   if ( __3__ ) exit
+
+   
+#Section 5. In this section, we know the player didn't type "all". So $1 should
+#hopefully be the name of one of the files in ~/_/i/_. That's what __4__ tests:
+else if ( __4__ ) then
+   rm ~/_/i/_/*
+#Note, we have to move the file to ~/_/i/_, not ~/i/i, because it may be heavy:
+   mv $1 ~/_/i/_
+
+   
+#Section 6. In this section, we know that we failed to get. But there are three
+#different error messages, and we need to print the right one:
+else
+   rm ~/_/i/_/*
+   #Note __5__ is long, but it cannot be longer than 100 characters:
+   if ( __5__ ) then
+      echo I do not know what that is.
+   else if ( __6__ ) then
+      echo You cannot take that.
+   else 
+      echo I do not see that here.
+   endif
+endif
+
+
+#Section 7: This section sees if the load is too heavy.
+#At this point, every error message, except for the weight message, has been
+#printed, and the only way for ~/_/i/_ to be non-empty is that no error message
+#has printed. Now we just need to see if the file(s) in ~/_/i/_ are too heavy.
+#The command line below has 4 parts:
+#  cd ~/_/i: Notice that this is neither ~/_/i/_ or ~/i/i. It is their parent
+#            directory, because the total weight is combined between the two
+#            child directories.
+#
+#  __7__: This is A SET OF wildcard patterns that cause different objects to
+#         list a different number of times, based on how heavy they are in the
+#         game (eg, the "axe" weighs 1 unit, the "preserver" weighs 3, and the
+#         "weight" weighs 10). Therefore, your __7__, should produce an output
+#         like the following produces:
+#         %cd ~/_;mkdir T;mv fi*dir T;cd T;ls __7__;cd ..;mv T/fi*dir .;rmdir T
+#         filenamesdir/axe          filenamesdir/gold       filenamesdir/shovel
+#         filenamesdir/bed          filenamesdir/ibm        filenamesdir/silver
+#         filenamesdir/boulder      filenamesdir/key        filenamesdir/urinal
+#         filenamesdir/box          filenamesdir/ladder     filenamesdir/weight
+#         filenamesdir/bracelet     filenamesdir/lake       filenamesdir/weight
+#         filenamesdir/button       filenamesdir/lamp       filenamesdir/weight
+#         filenamesdir/cable        filenamesdir/painting   filenamesdir/weight
+#         filenamesdir/chute        filenamesdir/platinum   filenamesdir/weight
+#         filenamesdir/description  filenamesdir/preserver  filenamesdir/weight
+#         filenamesdir/description  filenamesdir/preserver  filenamesdir/weight
+#         filenamesdir/dial         filenamesdir/preserver  filenamesdir/weight
+#         filenamesdir/diamond      filenamesdir/rms        filenamesdir/weight
+#         filenamesdir/diamond      filenamesdir/rms        filenamesdir/weight
+#         filenamesdir/floor        filenamesdir/shovel
+#         %
+#         Note that, in the above, certain ungettable objects also printed (eg,
+#         "floor", "description", and, for some solutions "w"). This is not a
+#         problem, because these are don't-care matches, since those files will
+#         never exist in ~/_/i/_ or ~/_i/i
+#         Note also, your __7__ must search in both subdirectories with each
+#         pattern -- you cannot have "i/..." or "_/..." in your answer.
+#
+#  __8__: This is just a flag to the wc command.
+#
+#  __9__: This is an extended regular expression. Note:It is one expression. No
+#         flags can be used.
+(cd ~/_/i; ls __7__ | wc __8__ | egrep __9__ ) >& ~/X && echo Your load would be too heavy. && mv ~/_/i/_/* . && exit
+
+
+#Now we know that we can get the object(s).
+#Section 8: This section sees if the weight has been lifted off of the button.
+#           In that case, we need to move "nw" to ".nw" and ".u" to "u". Also,
+#           we need to get rid of all of directions except for "u".
+...
+
+#We now can get the objects. But we need to print the "Taken" messages.
+cd ~/_/i/_
+
+#Section 9. This section handles if $1 is NOT "all". The __10__ should be the
+#           opposite of whatever __2__ was:
+if ( __10__ ) then
+   mv * ../i >& ~/X && echo Taken.
+   exit
+endif
+
+# Section 10. We know that we have typed, "get all" and that each item needs to
+# print with one of these messages "A brass key", "A slip of paper", "A life
+# preserver", "A floppy disk", "An RMS statuette", "A <some metal> bar" (eg,
+# "A platinum bar"), or "A/An <object name>" (eg, "An axe").
+# Remember: We are currently in the ~/_/i/_ directory, where all the files that
+#           we want to move exist.
+# Remember also: the "case" statements below must each go on its OWN line (due
+#                to a rule in the cshell syntax).
+#
+foreach __11__
+  switch ( __12__ )
+    #Insert cases deal with the key, paper, preserver, floppy, and rms.
+    #
+    #Then insert three case statements for the three metals on three sequential
+    #lines, but falling into the next (ie, there's just one echo -n "A...bar").
+    #
+    #Then the default case deals with the remaining objects. On these remaining
+    #objects, there is a question of whether to print an "A" or an "An" before
+    #the object's name. You CAN use sed to solve this, but I will give bonus
+    #points if you can do it with grep and tr.
+    case ...
+    ...
+  endsw
+  echo : Taken.
+end
+mv * ../i

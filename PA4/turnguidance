@@ -1,0 +1,103 @@
+#!/usr/bin/tcsh
+# This file contains guidance on implementing "turn", which is a large part of
+# the new homework. The full assignment will be posted later. But you should
+# get started with this.
+#
+# Because the game starts with the sauna off, the temperature is at its lowest
+# setting, as indicated by the file temperature2 existing:
+#  % cd ~/PA3/rooms/receivingRoom/e/e
+#  % ls
+#  9  description  dial  floppy  temperature2
+#  % cat temperature2
+#  The temperature has returned to normal room temperature.
+#
+# But consider the following:
+#  % ls .temp*
+#  .temperature3  .temperature4  .temperature5  .temperature6
+#
+# Notice that there is not file "temperature1" or ".temperature1", because
+# "temperature2" corresponds to room temperature.
+#
+# Now let's look at what is in these hidden files:
+#  % cat .temperature3
+#  It is now luke warm in here. You are perspiring.
+#  % cat .temperature4
+#  It is pretty hot in here. It is still very comfortable.
+#  % cat .temperature5
+#  It is now very hot.  There is something very refreshing about this.
+#  % cat .temperature6
+#  As the dial clicks into place, you immediately burst into flames.
+# 
+#  You are dead.
+#  %
+#
+# As we see, these files contain the messages that are displayed as you turn
+# the dial. (Indeed, even temperature2's message is about "returning" to normal
+# temperature -- meaning that that message only will display if you turn the
+# dial back to this setting.)
+#
+#
+# And now, for the actual coding:
+#
+#Fill in the 7 blanks below:
+if ( __1__ ) then
+   set msg = "You must supply an object."
+else if (((__2__)&&(__3__))||(__4__)) then
+   set msg = "I don't know what that is."
+else if ( __5__ ) then
+   set msg = "I don't see that here."
+else if ( __6__ ) then
+   set msg = "You can't turn that."
+endif
+if ( __7__ ) then
+   echo $msg
+   exit 1
+endif
+
+#Fill in the blank below with a test if the 2nd argument is "clockwise".
+#But note: the program should not crash if the user types something unexpected.
+if ( __8__ ) then
+   # Fill in the blank below to create a variable that holds the target number.
+   # What is the target number? Well, if the current temperature file is
+   # "temperature2", then target number be "3" (i.e., turning clockwise will
+   # raise the setting by 1, and the setting is currently 2, so make it 3).
+   set __9__
+#Fill in the blank below similarly to __8__ above, but for counterclockwise:
+else if ( __10__ ) then
+   # Fill in the blank below similarly to __9__ above, but for counterclockwise
+   # (Even though there is no "temperature1" file, "1" is the correct answer
+   # if the use tries to turn too far counterclockwise):
+   set __11__
+else
+   echo You must indicate clockwise or counterclockwise.
+   exit 2
+endif
+
+# Create an array holding the following strings:
+# "The dial will not turn further in that direction.", "The temperature has
+# returned to normal room temperature.", "It is now luke warm in here.  You
+# are perspiring.", "It is pretty hot in here.  It is still very comfortable.",
+# "It is now very hot.  There is something very refreshing about this.", and
+# "As the dial clicks into place, you immediately burst into flames.@@You are
+# dead.".
+set __12__
+
+# Display the appropriate message from the array, using the target number (Note
+# we could also have used "cat" on the one of the .temperature files, but I
+# want you to practice using an array):
+echo __13__ | tr @ "\n"
+
+# Fill in the __14__ with the calculated target number:
+switch ( __14__ )
+   # Below here add cases to take the appropriate actions. These are: 
+   # - Display a message about the floppy disk, then remove it.
+   # - Display a message about the statuette, then replace it with a diamond.
+   # - Unless the target temperature is "1", make the current temperature file
+   #   hidden, and make the file indicated by the target temperature be not
+   #   hidden. Note: You must do this inside of only one case of this switch;
+   #                 this means that you need to let other cases fall-into that
+   #                 case to get it to work.
+   # - Exit with a 0 if you died
+   # - Exit with a nonzero otherwise
+   __15-__
+endsw

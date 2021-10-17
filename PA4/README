@@ -1,0 +1,15 @@
+Programming Assignment #4
+
+Due date: May 10th, at 11:59pm
+
+Submission rules: Submit a tar file named "PA4.tar". That file must contain a
+                  directory named "PA4". In that directory, you must have the
+		  files "get", "drop", "break", "turn", and "cantmove". The
+		  directory cannot contain any other files.
+
+How to do the assignment: The provided checkYourOutput.sh script tests many
+things, but it only requires the "get" script from the PA3solution (which has
+been included as a subdirectory in this new posting). So do the "get" script
+after you do the other parts.
+
+Note: the cantmoveguidance file was updated slightly from the earlier version.

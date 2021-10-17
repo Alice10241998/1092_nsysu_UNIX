@@ -1,0 +1,34 @@
+#!/usr/bin/tcsh
+
+#Section #1: (Same as PA3 solution)
+if ( $# == 0 ) then
+  echo You must supply an object.
+  exit
+else if ( -e ~/_/i/i/$1 ) then
+  mv ~/_/i/i/$1 .
+  echo Done.
+  if ( ( $1 == weight ) && ( -e button ) ) then
+    echo A passageway opens.
+    ln -s . d; ln -s . e; ln -s . ne; ln -s . se; ln -s . sw; ln -s . w
+    mv .nw nw; mv u .u
+  endif
+
+
+#Section #1.5 (The new case of dropping an unknown object.):
+#The message "I don't know what that is." is also printed by the turn script.
+#And the logic is the same. So lines 45&46 of the turnguidance file is similar:
+#  % grep know turnguiadance -nB1
+#  45-else if (((__2__)&&(__3__))||(__4__)) then
+#  46:   set msg = "I don't know what that is."
+#  %
+#
+# So here, also, we use the same the __[234]__ blanks:
+else if (((__2__)&&(__3__))||(__4__)) then
+   echo I don\'t know what that is.
+
+   
+#Section #2: (Same as PA3 solution)
+else
+   echo "You don't have that."
+endif
+

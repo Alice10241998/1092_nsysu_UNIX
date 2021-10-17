@@ -1,0 +1,61 @@
+#!/usr/bin/tcsh
+if ( ! -e ~/_/i/i/axe ) then
+   echo You have nothing you can use to break things.
+
+#The following __1__ tests if there was no argument given to the break command:
+else if ( __1__ ) then
+   echo You must supply an object.
+
+#The following __2__, __3__, and __4__ test if the provided argument is not a
+#known object. I'll describe __4__ first, then __2__, then __3__.
+# __4__: This looks in the filenamesdir directory for a file named the same as
+#        the first argument. __4__ evaluates to TRUE if the file is NOT found.
+# But the filenamesdir also contains names that are not objects, such as "ne", 
+# "1", "description", "floor", etc. The __2__ and __3__ will ensure that we do
+# get the message "I don't know what that is.", if $1 is one of those names.
+# __2__: This pattern is simple: it checks if the first letter of the argument
+#        is one of these characters: "1", "9", "d", "e", "f", "n", "s", "t",
+#        "u", "v", or "w". But it has to perform the test using cshell's =~
+#        operator. Also note: the =~ wildcards do not support the range symbol
+#        in "[...]" patterns. (ie, "[def]" works but [d-f] doesn't).
+# __3__: Because the code below says (__2__)&&(__3__), we know this __3__ only
+#        runs if the __2__ passed (which means that the first letter of $1 is
+#        a match to one of the non-objects, such as "temperature2" or "u").
+#        But some real objects also begin with those letters, such as "towel"
+#        and urinal. Therefore __3__ uses cshell's !~ operator to ensure that
+#        $1 is NOT one of these: "diamond", "floppy", "shovel", "silver",
+#        "towel", "urinal", or "weight".
+#        This wildcard pattern is a little difficult. It is helpful for your
+#        testing to make a test directory:
+#         cd filenamesdir; mkdir tmpd; cp __2__ tmpd; ls tmpd/__3__; rm -r tmpd
+#        You will see that tmpd is removed because it is only for testing, not
+#        not for use in your final solution. 
+#        Again, as with __2__, know that the range operator does not work.
+else if (((__2__)&&(__3__))\
+        ||( __4__ )) then
+   echo I don\'t know what that is.
+
+# The next section is from the last homework, but I added the "X"s that you see
+# below, because this new homework must work for any input the user might type:
+else if ( ( ! -e $1 ) && ( ! -e ~/_/i/i/$1 ) ) then
+   echo I don\'t see that here.
+else if ( ( -e $1 ) && ( X$1 =~ X*[aworkv][maxslept]*[mykdrslept] ) ) then
+   echo Your axe breaks it into a million pieces.
+   rm $1
+   if ( __5__ ) then
+      echo "It is pitch dark.  You are likely to be eaten by a grue."
+   endif
+else if ( X$1 == Xcable ) then
+   echo "As you break the ethernet cable, everything starts to blur.  You collapse@for a moment, then straighten yourself up.@@Connection closed."|tr @ \\n
+   exit 0
+
+# The __6__ test is simple: see if $1 is in the room. If so, it is an immovable
+# object, because getable objects were already handled, above.
+else if ( __6__ ) then
+   rm ~/_/i/i/axe
+   echo Your axe shatters into a million pieces.
+else
+   echo "You take the object in your hands and swing the axe.  Unfortunately, you miss@the object and slice off your hand.  You bleed to death.@@You are dead."|tr @ \\n
+   exit 0
+endif
+exit 1

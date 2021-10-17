@@ -1,0 +1,10 @@
+#!/usr/bin/tcsh
+
+#Section #1:
+mv $1 ~/_/i/_
+
+#Section #2:
+cd ~/_/i/_
+
+#Section #3:
+mv * ../i >& ~/X && echo Taken.

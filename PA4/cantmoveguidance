@@ -1,0 +1,55 @@
+#!/usr/bin/tcsh
+#Section #1 (Same as PA3):
+#set echo
+set cutfl = "c1-4 --complement"
+
+#New Section #1.5 (covers the case of drowning):
+#In the PA3.sh file (now named PA4.sh), drowning was already solved:
+#  % grep swim PA4.sh | sed 's/.*;//'
+#  (ls lake&&ls s/lake&&echo `ls ~/_/i/i`|grep -v \\\<p)>&~/X&&grep ~/PA1/explanatoryWalkthrough.txt -eswim -C2|cut -$cutfl&&quit'
+#  %
+#
+#But the solution in the PA4.sh script is only for moving forward. What if you
+#swim south across the lake, then drop the preserver, then swim north again? In
+#that case, you would be backtracking, and it will be the job of this cantmove
+#script to print the message about drowning, to create the !/_die file, and
+#then to exit with a non-zero value. That is the job of this Section #1.5.
+...
+
+#Section #2 (It is the same as PA3):
+if ( -d $1 ) then
+   #It is the locked door. It needs to get a second chance, in PA3.sh.
+   echo You must type a 3 digit combination code to enter this room.
+   echo -n "Enter it here: "
+   set X = $<:q
+   if ( x$X == x418 ) then
+      chmod 766 w
+      cd w
+      if ( ! -e ~/_/i/i/lamp ) then
+         grep ~/PA3/expl*Walkthrough.txt -elikely|cut -$cutfl|tee ~/_/grue de*
+	 exit 1
+      endif
+   else
+      echo Sorry, that combination is incorrect.&& exit 0
+   endif
+
+#Section #3 (It is the same as PA3):
+else if ( ( -e $1 ) || ( -l $1 ) ) then
+   echo You cannot go that way. && exit 0
+else
+   basename `pwd`|tr sundew ndsuwe | xargs expr $1 \!= >&~/X && echo You cannot go that way. && exit 0
+   cd ..
+endif
+
+#Section 3.5:
+#At this point, we know it's a backtrack. But we may be going into the dark.
+#The __1__ below is a complex if-statement that determines if the room is dark:
+if ( __1__ ) then 
+   grep ~/PA1/explana*Walkthrough.txt -elikely|cut -$cutfl|tee ~/_/grue > de*
+endif
+if ( -e w/cable ) chmod 400 w
+
+#Section #4 (It is the same as PA3):
+head -n `ls [19]` de*&&mv 9 1 >&~/X
+grep -hw `ls -d *| paste ~/_/es -` -h ~/_/T*|cut -d\; -f1
+exit 3
