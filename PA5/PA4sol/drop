@@ -1,0 +1,19 @@
+#!/usr/bin/tcsh
+if ( $# == 0 ) then
+  echo You must supply an object.
+  exit
+else if ( -e ~/_/i/i/$1 ) then
+  mv ~/_/i/i/$1 .
+  echo Done.
+  if ( ( $1 == weight ) && ( -e button ) ) then
+    echo A passageway opens.
+    ln -s . d; ln -s . e; ln -s . ne; ln -s . se; ln -s . sw; ln -s . w
+    mv .nw nw; mv u .u
+  endif
+else if (((x$1 =~ "x[n19defstuvw]*")&&(x$1 !~ "x[dfstuvw]?[wiola][englmvp]*"))\
+        ||( ! -e ~/_/filenamesdir/$1 )) then
+   echo I don\'t know what that is.
+else
+   echo "You don't have that."
+endif
+

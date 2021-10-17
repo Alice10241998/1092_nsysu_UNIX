@@ -1,0 +1,572 @@
+As you will remember, we have been implementing the second level of the game,
+by loading the savedgame file that I provided to you. If you had played through
+first level, however, you would have been surprised to learn how we had gotten
+to this second level.
+
+Let's now simply play through level 1, without preloading into level 2, from a
+saved game file. (You won't implement level 1; we just want to understand about
+it.) In order to get through level 1 as fast as possible, I'll play perfectly,
+such as already knowing the passwords to the computers in the game. Let's go:
+    % emacs -batch -l dunnet
+
+    Dead end
+    You are at a dead end of a dirt road.  The road goes to the east.
+    In the distance you can see that it will eventually fork off.  The
+    trees here are very tall royal palms, and they are spaced equidistant
+    from each other.
+    There is a shovel here.
+    >get all
+    A shovel: Taken.
+    >e
+    E/W Dirt road
+    You are on the continuation of a dirt road.  There are more trees on
+    both sides of you.  The road continues to the east and west.
+    There is a large boulder here.
+    >e
+    Fork
+    You are at a fork of two passages, one to the northeast, and one to the
+    southeast.  The ground here seems very soft. You can also go back west.
+    >dig
+    I think you found something.
+    >get all
+    A computer board: Taken.
+    >se
+    SE/NW road
+    You are on a southeast/northwest road.
+    There is some food here.
+    >get all
+    Some food: Taken.
+    >se
+    Bear hangout
+    You are standing at the end of a road.  A passage leads back to the
+    northwest.
+    There is a ferocious bear here!
+    >drop food
+    Done.
+    The bear takes the food and runs away with it. He left something behind.
+    >get all
+    A brass key: Taken.
+    >nw
+    SE/NW road
+    >nw
+    Fork
+    >ne
+    NE/SW road
+    You are on a northeast/southwest road.
+    >ne
+    Building front
+    You are at the end of the road.  There is a building in front of you
+    to the northeast, and the road leads back to the southwest.
+    >ne
+    Old Building hallway
+    You are in the hallway of an old building.  There are rooms to the east
+    and west, and doors leading out to the north and south.
+    >w
+    Computer room
+    You are in a computer room.  It seems like most of the equipment has
+    been removed.  There is a VAX 11/780 in front of you, however, with
+    one of the cabinets wide open.  A sign on the front of the machine
+    says: This VAX is named ‘pokey’.  To type on the console, use the
+    ‘type’ command.  The exit is to the east.
+    The panel lights are steady and motionless.
+    >put card in vax
+    As you put the CPU board in the computer, it immediately springs to life.
+    The lights start flashing, and the fans seem to startup.
+    >
+
+OK. So now we have activated the computer named "pokey". I magically know its
+password, so let's log in:
+    >type
+
+
+    UNIX System V, Release 2.2 (pokey)
+
+    login: toukmond
+    password: robert
+
+    Welcome to Unix
+
+    Please clean up your directories.  The filesystem is getting full.
+    Our tcp/ip link to gamma is a little flaky, but seems to work.
+    The current version of ftp can only send files from your home
+    directory, and deletes them after they are sent!  Be careful.
+
+    Note: Restricted bourne shell in use.
+
+    $
+
+The login message says that there is another computer on the network, called
+gamma. That will become important in a moment. The prompt has changed to "$".
+The dunnet game is about to get weird. At this point, it starts pretending to
+be UNIX. (It is a pleasing symmetry to how we have been using UNIX to pretend
+to be the game!)
+
+Let's see what is in our home directory:
+    $ ls
+    total 467
+    drwxr-xr-x  3 toukmond restricted      512 Jan 1 1970 .
+    drwxr-xr-x  3 root     staff          2048 Jan 1 1970 ..
+    -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 ls
+    -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 ftp
+    -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 echo
+    -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 cd
+    -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 pwd
+    -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 rlogin
+    -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 ssh
+    -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 uncompress
+    -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 cat
+    -rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 paper.o.Z
+    -rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 lamp.o
+    -rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 shovel.o
+    -rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 key.o
+    $
+
+In the above, note that there are some executable files, such as ls (which we
+have just used), and such as ftp and rlogin (which we'll be using in a moment).
+Notice also the object files: "lamp.o", "key.o", and "shovel.o". These names
+are meaningful, because the "objects" in our inventory are, in fact, the lamp,
+the key, and the shovel. The next thing to try doing is to send some of these
+object files to gamma:
+    $ ftp gamma
+    Connected to gamma. FTP ver 0.9 00:00:00 01/01/70
+    Username: anonymous
+    Guest login okay, send your user ident as password.
+    Password: toukmond
+    Guest login okay, user access restrictions apply.
+    ftp> bin -i
+    Type set to binary.
+    ftp> send lamp.o
+    Sending binary file for a lamp, (0 bytes)
+    Transfer complete.
+    ftp> send shovel.o
+    Sending binary file for a shovel, (0 bytes)
+    Transfer complete.
+    ftp> quit
+    $
+
+I've sent over the lamp.o and shovel.o object files, but not the key.o file.
+Let's see if the key.o file is still in our home directory:
+    $ ls
+    total 467
+    drwxr-xr-x  3 toukmond restricted      512 Jan 1 1970 .
+    drwxr-xr-x  3 root     staff          2048 Jan 1 1970 ..
+    -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 ls
+    -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 ftp
+    -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 echo
+    -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 exit
+    -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 cd
+    -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 pwd
+    -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 rlogin
+    -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 ssh
+    -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 uncompress
+    -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 cat
+    -rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 paper.o.Z
+    -rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 key.o
+    $
+
+Yes, the key.o file is still here, but the other two .o files were sent over
+to gamma. Let's log-in to gamma and see them in that home directory (I happen
+to know that the password is "worms"):
+    $ rlogin gamma
+    Password: worms
+
+    You begin to feel strange for a moment, and you lose your items.
+    You step back from the console.
+
+    Receiving room
+    You are in a round, stone room with a door to the east.  There
+    is a sign on the wall that reads: ‘receiving room’.
+    There is a lamp nearby.
+    There is a shovel here.
+    >i
+    You currently have:
+    >
+
+Weird. We didn't log-in to gamma as we expected. Instead, we teleported to
+level 2. (Or, did we? Are we actually typing UNIX commands in the game, just
+like in our version of it? Maybe we are logged into gamma?) Anyway, we see
+that the lamp and the shovel are here, and that the key is not (because we
+did not ftp it over). Nor is it in our inventory.
+
+So that is the weird story of what level 2 of the game really is.
+
+
+Let's now get back to our implementation. I've provided a new saved game file,
+AtGammaCenter, that has played the game a little farther. In this playthrough,
+I did not go into the sauna room to get the diamond. I also came right to the
+gamma center once I entered the cave. Let's see:
+    >restore AtGammaCenter
+    Done.
+    North end of cave passage
+    >l
+    North end of cave passage
+    You are at the north end of a north/south passageway.  There are stairs
+    leading down from here.  There is also a door leading west.
+    >w
+    You must type a 3 digit combination code to enter this room.
+    Enter it here:
+    Sorry, that combination is incorrect.
+    >
+
+Yes, we are outside of the gamma computing center. But we won't go in that
+room right now. We will look around more first. Now, in this saved file, I
+came right to this room after entering the cave. So the room to the south
+has been visited, but the room below us has not been:
+    >l
+    North end of cave passage
+    You are at the north end of a north/south passageway.  There are stairs
+    leading down from here.  There is also a door leading west.
+    >s
+    N/S/W Junction
+    >n
+    North end of cave passage
+    >d
+    Bedroom
+    You are in what appears to be a worker's bedroom.  There is a queen-
+    sized bed in the middle of the room, and a painting hanging on the
+    wall.  A door leads to another room to the south, and stairways
+    lead up and down.
+    >
+
+Yes, the N/S/W Junction displays a short message, but the bedroom displays a
+long one, meaning that it has not been visited before.
+
+Well, that's enough walking around. Let's get into the gamma computing center:
+    >u
+    North end of cave passage
+    >w
+    You must type a 3 digit combination code to enter this room.
+    Enter it here: 418
+    Gamma computing center
+    You are in the Gamma Computing Center.  An IBM 3090/600s is whirring
+    away in here.  There is an ethernet cable coming out of one of the units,
+    and going through the ceiling.  There is no console here on which you
+    could type.
+    >
+
+Our goal in the computing center is to cut the cable:
+    >i
+    You currently have:
+    A lamp
+    A shovel
+    A brass key
+    A bracelet
+    A slip of paper
+    An axe
+    A life preserver
+    An RMS statuette
+    A floppy disk
+    >drop key
+    Done.
+    >drop paper
+    Done.
+    >cut cable
+    As you break the ethernet cable, everything starts to blur.  You collapse
+    for a moment, then straighten yourself up.
+
+    Connection closed.
+    $
+
+Now why did it say "Connection closed."? Oh, it is because we had entered this
+level by logging into gamma. So if we've cut the cable, we cannot be logged in
+anymore. Does that mean that we are back on the first computer? I guess so:
+    $ ls
+    total 467
+    drwxr-xr-x  3 toukmond restricted      512 Jan 1 1970 .
+    drwxr-xr-x  3 root     staff          2048 Jan 1 1970 ..
+    -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 ls
+    -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 ftp
+    -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 echo
+    -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 exit
+    -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 cd
+    -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 pwd
+    -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 rlogin
+    -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 ssh
+    -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 uncompress
+    -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 cat
+    $ pwd
+    /usr/toukmond
+    $
+
+Yes, we are back in our home directory on 'pokey'. Now that we understand
+how this all works, let's look around on this computer:
+    $ cd ..
+    $ ls
+    total 4
+    drwxr-xr-x  3 root     staff           512 Jan 1 1970 .
+    drwxr-xr-x  3 root     staff          2048 Jan 1 1970 ..
+    drwxr-xr-x  3 toukmond restricted      512 Jan 1 1970 toukmond
+    $ cd ..
+    $ ls
+    total 4
+    drwxr-xr-x  3 root     staff           512 Jan 1 1970 .
+    drwxr-xr-x  3 root     staff          2048 Jan 1 1970 ..
+    drwxr-xr-x  3 root     staff          2048 Jan 1 1970 usr
+    drwxr-xr-x  3 root     staff          2048 Jan 1 1970 rooms
+    $
+
+I wonder what is in that "rooms" directory?
+    $ cd rooms
+    $ ls
+    total 16
+    drwxr-xr-x  3 root     staff           512 Jan 1 1970 .
+    drwxr-xr-x  3 root     staff          2048 Jan 1 1970 ..
+    drwxr-xr-x  3 root     staff           512 Jan 1 1970 gamma-computing-center
+    drwxr-xr-x  3 root     staff           512 Jan 1 1970 bedroom
+    drwxr-xr-x  3 root     staff           512 Jan 1 1970 north-end-of-cave-passage
+    drwxr-xr-x  3 root     staff           512 Jan 1 1970 n-s-w-junction
+    drwxr-xr-x  3 root     staff           512 Jan 1 1970 cave-e-w-passage
+    drwxr-xr-x  3 root     staff           512 Jan 1 1970 misty-room
+    drwxr-xr-x  3 root     staff           512 Jan 1 1970 cave-entrance
+    drwxr-xr-x  3 root     staff           512 Jan 1 1970 lakefront-south
+    drwxr-xr-x  3 root     staff           512 Jan 1 1970 lakefront-north
+    drwxr-xr-x  3 root     staff           512 Jan 1 1970 health-club-front
+    drwxr-xr-x  3 root     staff           512 Jan 1 1970 reception-area
+    drwxr-xr-x  3 root     staff           512 Jan 1 1970 maze
+    drwxr-xr-x  3 root     staff           512 Jan 1 1970 maze
+    drwxr-xr-x  3 root     staff           512 Jan 1 1970 maze
+    drwxr-xr-x  3 root     staff           512 Jan 1 1970 maze
+    drwxr-xr-x  3 root     staff           512 Jan 1 1970 maze
+    drwxr-xr-x  3 root     staff           512 Jan 1 1970 maze-button-room
+    drwxr-xr-x  3 root     staff           512 Jan 1 1970 weight-room
+    drwxr-xr-x  3 root     staff           512 Jan 1 1970 end-of-n-s-hallway
+    drwxr-xr-x  3 root     staff           512 Jan 1 1970 northbound-hallway
+    drwxr-xr-x  3 root     staff           512 Jan 1 1970 receiving-room
+    $
+
+Interesting. It is a list of every room that we have visited. Notice that the
+bottom in the list is the receiving-room, which is the first room we visited.
+And the gamma-computing-center is at the top of the list, which is the last
+room we visited. The bedroom is second-to-the-top, because we visited it just
+before going into the gamma computing center. Most importantly, rooms like the
+bathroom or the sauna, which we never visited, do NOT display.
+
+(Also not displayed are the rooms from the first level. This is a difference
+from a straight playthrough of the game, because level 1's rooms also ought to
+display -- after all, you can't get into level 2 without first playing level 1.
+So why aren't they displaying in our current walkthrough? It is because I have
+hacked the saved game files that I have given you, by marking those rooms as
+having not been visited. I did this to make our game play more logically: since
+our game doesn't implement level 1, it makes sense to not show rooms which you
+haven't visited.)
+
+OK. So let's see what is in these rooms:
+    $ cd misty-room
+    $ ls
+    total 4
+    drwxr-xr-x  3 root     staff           512 Jan 1 1970 .
+    drwxr-xr-x  3 root     staff          2048 Jan 1 1970 ..
+    -rwxr-xr-x  3 root     staff          2048 Jan 1 1970 description
+    -rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 gold.o
+    $ cat description
+    You are in a misty, humid room carved into a mountain.
+    To the north is the remains of a rockslide.  To the east, a small
+    passage leads away into the darkness.
+    $ cat gold.o
+    Ascii files only.
+    $
+
+Now that is interesting. The directory contents of these rooms looks a lot like
+the contents of our directories for the rooms. There is a description file that
+is just like our description files. The objects in those rooms also appear in
+their directories, just like in our version (I never picked up the gold bar,
+which is why it is still in the misty room). But there are three differences.
+First, the object names include a ".o". Second, attempts to display the files
+gives the answer "Ascii files only.". And third, only gettable objects display.
+
+One room that is particularly interesting to look at is the gamma computing
+center. When we had cut the cable, we had had many objects in our inventory.
+But we have seen, above, that those objects are not in our home directory (and,
+thus, not in our present inventory). Where did they go? Well, the best place to
+look for something is where you last saw it. So we should got to the gamma
+computing center:
+    $ cd /rooms/gamma-computing-center
+    $ ls
+    total 4
+    drwxr-xr-x  3 root     staff           512 Jan 1 1970 .
+    drwxr-xr-x  3 root     staff          2048 Jan 1 1970 ..
+    -rwxr-xr-x  3 root     staff          2048 Jan 1 1970 description
+    -rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 key.o
+    -rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 lamp.o
+    -rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 shovel.o
+    -rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 bracelet.o
+    -rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 paper.o
+    -rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 preserver.o
+    -rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 rms.o
+    -rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 nil
+    -rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 axe.o
+    $
+
+We found are our lost objects! Both the dropped objects (the key and the paper,
+see lines 259-262, above) and the inventory objects are all here. And look at
+their names. Have you ever wondered why we called the emerald bracelet as
+"bracelet", not as "emerald"?  Well, now you know that it is because the real
+game itself calls it "bracelet.o" (not "emerald.o"). Maybe you particularly
+wondered why the wax statuette of Richard Matthew Stallman was called "rms"
+instead of "wax" or "statuette", but now you know why: that object has the name
+"rms.o" in the game.
+
+Looking again at the above file listing, we notice one unusual file, "nil". Why
+is this file here? Well, if you look way back earlier in our playthrough, you
+will see the following:
+    % cat walkthroughPA5.txt | sed '248,259\!d'
+    >i
+    You currently have:
+    A lamp
+    A shovel
+    A brass key
+    A bracelet
+    A slip of paper
+    An axe
+    A life preserver
+    An RMS statuette
+    A floppy disk
+    >drop key
+    %
+    
+Comparing this inventory to the objects in the room, we see the floppy disk is
+missing. This is a "bug" in the game. Not a real bug; just a "bug". (The reason
+is: we cheated to enter the gamma computing center by magically knowing the
+3-digit combination. In the real game, you must lose the floppy disk in order
+to get the combination. So the game treats the floppy disk name as a don't-care
+condition.) So, whereas other objects get named with a ".o", the floppy becomes
+"nil".
+
+There is one more point to make: the key is a special object that has the power
+to stay in you inventory. Let's restore to the game and not drop the key this
+time:
+    $ restore AtGammaCenter
+    restore: not found.
+    $ quit
+    quit: not found.
+    $
+
+Hey. How do I get out of this? Well, the game considers our typing as UNIX
+commands. Is there a command that would be logical to try? Well let's recall
+what commands exist:
+    $ cd /usr/toukmond
+    $ ls
+    total 467
+    drwxr-xr-x  3 toukmond restricted      512 Jan 1 1970 .
+    drwxr-xr-x  3 root     staff          2048 Jan 1 1970 ..
+    -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 ls
+    -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 ftp
+    -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 echo
+    -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 exit
+    -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 cd
+    -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 pwd
+    -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 rlogin
+    -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 ssh
+    -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 uncompress
+    -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 cat
+    $ exit
+
+    You step back from the console.
+
+    Computer room
+    You are in a computer room.  It seems like most of the equipment has
+    been removed.  There is a VAX 11/780 in front of you, however, with
+    one of the cabinets wide open.  A sign on the front of the machine
+    says: This VAX is named ‘pokey’.  To type on the console, use the
+    ‘type’ command.  The exit is to the east.
+    The panel lights are flashing in a seemingly organized pattern.
+    >
+
+Yes, we know the UNIX command "exit". Well now that we're back to a ">" prompt,
+we can restore the saved game, and not drop the key, this time:
+    >restore AtGammaCenter
+    Done.
+    North end of cave passage
+    >w
+    You must type a 3 digit combination code to enter this room.
+    Enter it here: 418
+    Gamma computing center
+    You are in the Gamma Computing Center.  An IBM 3090/600s is whirring
+    away in here.  There is an ethernet cable coming out of one of the units,
+    and going through the ceiling.  There is no console here on which you
+    could type.
+    >cut cable
+    As you break the ethernet cable, everything starts to blur.  You collapse
+    for a moment, then straighten yourself up.
+
+    Connection closed.
+    $ ls
+    total 467
+    drwxr-xr-x  3 toukmond restricted      512 Jan 1 1970 .
+    drwxr-xr-x  3 root     staff          2048 Jan 1 1970 ..
+    -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 ls
+    -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 ftp
+    -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 echo
+    -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 exit
+    -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 cd
+    -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 pwd
+    -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 rlogin
+    -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 ssh
+    -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 uncompress
+    -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 cat
+    -rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 key.o
+    $ cd /rooms/gamma-computing-center
+    $ ls
+    total 4
+    drwxr-xr-x  3 root     staff           512 Jan 1 1970 .
+    drwxr-xr-x  3 root     staff          2048 Jan 1 1970 ..
+    -rwxr-xr-x  3 root     staff          2048 Jan 1 1970 description
+    -rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 lamp.o
+    -rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 shovel.o
+    -rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 bracelet.o
+    -rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 paper.o
+    -rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 axe.o
+    -rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 preserver.o
+    -rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 rms.o
+    -rwxr-xr-x  1 toukmond restricted        0 Jan 1 1970 nil
+    $
+
+So, yes, the "key.o" file is now in the home directory, while all of our other
+inventory objects have been left behind in the gamma computing center. Let's
+make sure that it really is in our inventory:
+    $ exit
+
+    You step back from the console.
+
+    Computer room
+    You are in a computer room.  It seems like most of the equipment has
+    been removed.  There is a VAX 11/780 in front of you, however, with
+    one of the cabinets wide open.  A sign on the front of the machine
+    says: This VAX is named ‘pokey’.  To type on the console, use the
+    ‘type’ command.  The exit is to the east.
+    The panel lights are flashing in a seemingly organized pattern.
+    >i
+    You currently have:
+    A brass key
+    >
+
+Yes it is in our inventory. This raises a question what would happen if we were
+to drop it now:
+    >drop key
+    Done.
+    > type
+    $ cd /usr/toukmond
+    $ ls
+    total 467
+    drwxr-xr-x  3 toukmond restricted      512 Jan 1 1970 .
+    drwxr-xr-x  3 root     staff          2048 Jan 1 1970 ..
+    -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 ls
+    -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 ftp
+    -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 echo
+    -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 exit
+    -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 cd
+    -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 pwd
+    -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 rlogin
+    -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 ssh
+    -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 uncompress
+    -rwxr-xr-x  1 toukmond restricted    10423 Jan 1 1970 cat
+    $
+
+Yes, it is no longer in our inventory. (Instead it is in the new computer-room
+directory -- but we won't worry about that because we aren't going to implement
+the exit command or this computer room.)
+
+So this new homework will involve creating the directory structure of pokey,
+based in what rooms have been visited, and what objects are in this rooms.
+This homework will involve using sed, and the details will come later. But
+this file is provided so that you can start thinking about the assignment.

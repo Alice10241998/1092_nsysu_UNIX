@@ -1,0 +1,33 @@
+#!/usr/bin/sed -f
+
+#Section 1:
+1i mkdir pokey pokey/rooms pokey/usr pokey/usr/toukmond
+1i seq 2306 > pokey/usr/toukmond/cd; seq 2306 > pokey/usr/toukmond/ls; seq 2306 > pokey/usr/toukmond/echo; seq 2306 > pokey/usr/toukmond/ftp; seq 2306 > pokey/usr/toukmond/pwd; seq 2306 > pokey/usr/toukmond/rlogin; seq 2306 > pokey/usr/toukmond/ssh; seq 2306 > pokey/usr/toukmond/uncompress; seq 2306 > pokey/usr/toukmond/cat
+
+#section 2:
+/==> .\/filenamesdir\/description <==/{$!N;$!N;d;}
+
+#section 3:
+s/==> \(.*\)\/description <==/\1\//; h; z
+
+#Section 4:
+N;
+y/ABCDEFGHIJKLMNOPQRSTUVWXYZ\ \//abcdefghijklmnopqrstuvwxyz\-\-/
+G;
+
+#section 5:
+$!N
+s/\n/@/2
+s/\n//g
+
+# Section 6
+$a cp ~/_/i/i/key pokey/usr/toukmond/ 2>/dev/null
+h; s/\(.*\)@\(.*\)/mkdir pokey\/rooms\/\1 2\> \~\/\X/; p
+g; s/\(.*\)@\(.*\)/cp \2*[earokvw][maxslept]*[a-z] pokey\/rooms\/\1/; p
+
+# Section 7
+x; s/\(.*\)@\(.*\)/touch -r \21 pokey\/rooms\/\1/
+
+# Section 8
+$a chmod -R 755 pokey
+

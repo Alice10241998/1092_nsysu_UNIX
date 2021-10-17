@@ -1,0 +1,279 @@
+                    Programming Assignment #5
+
+Due: May 31, 11:59pm
+
+
+Submission method: Submit a tar file named "PA5.tar". It will contain 2 files:
+                   "makepokeymaker" and "runpokey".
+
+
+Remember: The strict rules against cheating are enforced. The guidelines for
+          group study (but not group work) are as in the previous homeworks.
+
+
+Assignment overview:
+
+Let's look at the directory where you found this README file:
+   % ls
+   AtGammaCenter  break2                 runpokey
+   PA4sol         checkYourOutputPA5.sh  testInputPA5.sh
+   README         expectedOutputPA5.txt  walkthroughPA5.txt
+   %
+
+First, we notice that the AtGammaCenter and walkthroughPA5.txt files from the
+earlier positing are also provided here.
+
+Second, we notice that there is a subdirectory with the PA4 solution. In this
+provided solution there is one change, however: when you bleed to death the
+break script performs the additional action of deleting the axe (we need this
+so that we can distinguish the two exit 0 conditions from the break script).
+
+Third, we notice that new testing files are provided. Let's look at this.
+   % head -6 testInputPA5.sh
+   source ~/PA4/PA4.sh
+   echo ">touch ~/_/i/i/floppy";touch ~/_/i/i/floppy
+   echo ">i";i
+   echo ">get all";get all
+   echo ">e";e
+   echo ">drop shovel";drop shovel
+
+The main thing that we notice above is that I have not bothered to create a
+new PA5 directory. Instead we just run the same "source ~/PA4/PA4.sh" as in
+the last homework. Looking towards the end of the new test input:
+   % tail -6 testInputPA5.sh | sed -n 1p
+   echo ">break cable";break cable
+   %
+So we see that the game plays to through until we break the cable. But, as we
+see above, that wasn't the last test line. What happens after the cable breaks?
+   % tail -6 testInputPA5.sh
+   echo ">break cable";break cable
+   echo "$ exit";exit
+   echo "% cd ~/_/pokey";cd ~/_/pokey
+   echo "% ls -lrt *";ls -lrt * | sed 's/  */ /g' | cut -d" " -f1,9 | sed 's/ / ? ? ? ? ? ? ? /'
+   echo "% ls -lrt */*";ls -lrt */* | sed 's/  */ /g' | cut -d" " -f1,9 | sed 's/ / ? ? ? ? ? ? ? /'
+   echo "% head -1 */*/description";head -1 */*/description
+So, as we see above, there are some lines to look around the pokey directory
+structure. These lines also cut out some of the ls -l output (it does this so
+everyone's output will be the same, by erasing the fields that can differ).
+Going further, let's see how this test input file is used:
+   cat checkYourOutputPA5.sh
+   echo "Be patient. This might take up to 2 minutes to run..."
+   ((source ~/PA4/testInputPA5.sh);(tail -4 ~/PA4/testInputPA5.sh>~/PA4/_tmptest;source ~/PA4/_tmptest;rm ~/PA4/_tmptest))|sed '/$ exit/{N;N;N;d}'>~/PA4/testOutputPA5.txt
+   echo ______________________________________________________________________
+   echo Finished Running. Now checking for differences to the expected output:
+   cd ~/PA4
+   diff testOutputPA5.txt expectedOutputPA5.txt && echo Your basic test passed.
+   %
+As we see above, the last four lines got put into a temporary file, which was
+then run and then deleted.
+
+Moving on, let's recall what is in our directory:
+   % ls
+   AtGammaCenter  break2                 runpokey
+   PA4sol         checkYourOutputPA5.sh  testInputPA5.sh
+   README         expectedOutputPA5.txt  walkthroughPA5.txt
+   %
+
+As we see above, there is a new "break2" file. How does it differ from the one
+in the previous homework? Let's see:
+   % diff -y -W100 break2 PA4sol
+   ~/PA4/break $* && ~/PA4/runpokey && quit      | ~/PA4/break $* && quit
+   %
+So the difference is that a runpokey script is executed if break succeeds (ie,
+exits with a 0, which means that you either bled to death or broke the cable).
+
+So lets look at runpokey:
+   % cat runpokey
+   #!/usr/bin/tcsh
+   ls ~/_/i/i/axe >& ~/X || exit 0
+   mv ~/_/i/i/[^k]* .
+   cd ~/_
+   find . -name 1|sed s/1/description/|xargs head -1|~/*4/makepokeymaker>makepokey
+   chmod u+x makepokey; ./makepokey
+   cd pokey/usr/toukmond
+   #You must add code here to emulate the unix commands ls, cd, cat and exit...
+
+We see several things above.
+  -The 1st line runs tcsh. You may need to change this path for your system.
+  -The 2nd line does the bleeding case, so from line 3 we know the cable's cut.
+  -The 3rd line moves everything-but-the-key into the gamma computing center.
+  -The 4th line goes into the rooms directory.
+  -The 5th line:
+    o Uses "find . -name 1" to locate rooms that were visited (unvisited rooms
+      would have a 9 instead of a 1.
+    o Uses "sed s/1/description/" to create paths to the description files of
+      all visited rooms
+    o Uses "xargs head -1" to get the top lines of those descriptions. If you
+      look at the walkthrough, you will see that those top lines are related to
+      the names of the directories for those rooms, on pokey.
+    o Uses "~/*4/makepokeymaker>makepokey".
+      Q:What is "makepokeymaker"? A:It is a sed program that you need to write.
+      Q:What is "makepokey"?. A:It is a script that creates all of the files
+                                and directories for pokey.
+-The 6th line runs "makepokey", thus creating all of the pokey directories.
+-The 7th line changes directory to "pokey/usr/toukmond", thus preparing to do
+ the emulation of pokey's UNIX operating system (which begins with us being in
+ toukmond's home directory).
+-The eighth line indicates that you need to add code for the emulation. This
+ code is not required for the basic test, however. Instead, in the basic test,
+ I use real UNIX to look at the pokey directories, not pokey's emulated UNIX.
+
+So now we need know the homework is: A basic test that requires you to write
+the "makepokeymaker" sed script, and A second part that requires you to finish
+implementing runpokey.
+
+Note:In this assignment, the order in which ls -l commands print is unimportant
+     but the order in which emulated ls commands print is important.
+     So if your basic test fails because of ls -l ordering, that is not a
+     problem.
+
+
+-----------------------------------------------------------------------------
+Guidance on makepokeymaker:
+
+The input to makepokeymaker comes from "find . -name 1|sed s/1/description/|
+xargs head -1". So we need to understand the format of head's output. The
+following example will show us that format:
+   % ls
+   AtGammaCenter  break2                 runpokey
+   PA4sol         checkYourOutputPA5.sh  testInputPA5.sh
+   README         expectedOutputPA5.txt  walkthroughPA5.txt
+   % cd ..
+   % head -1 PA5/*sh
+   ==> PA5/checkYourOutputPA5.sh <==
+   echo "Be patient. This might take up to 2 minutes to run..."
+
+   ==> PA5/testInputPA5.sh <==
+   source ~/PA4/PA4.sh
+   %
+
+See what happened?: head puts each file's info on three lines, with the third
+line being empty. The one exception is the final file, which does not get an
+empty line after it.
+
+So the input lines come in triplets: 1) a line that gives the path info (and
+some other stuff we don't need), 2) a line that gives us the room's name (this
+is because the runpokey script is passing in the top lines from the description
+files, and those top lines are very similar to pokey's room directory names),
+and 3) an empty line (or, for the last one, no empty line. Note: your script
+should not crash or skip this final one. Instead, you must use sed's $ command
+to detect it.)
+
+OK. Now that we understand the input, we can think how to implement it:
+
+
+**************
+* Section 0: *
+**************
+Line 1: #!/usr/bin/sed -f  or  #!/usr/sed -f   depending on your system.
+        Note: If your makepokeymaker is not a sed script, you get 0 total pts.
+
+
+**************
+* Section 1: *
+**************
+To make all the pokey directories, we need know the paths and names of the
+rooms visited, which is why runpokey passes that info into this sed script.
+But there are other directories in pokey which do not depend on this passed-in
+information (eg. the "/usr" directory).
+
+Here in section 1, we make the UNIX commands to make those other directories.
+(Note: there is no sed command to make a directory. But sed can make text, and
+that text can be saved to a file (eg, our script's output is being saved to the
+makepokey file). That file can then be executed to perform the actions that are
+indicated in it.)
+
+These other directories only need to be made one time, so Section 1 should be
+predicated to only execute on the first input line.
+The behavior of Section 1 is:
+ - Make the pokey, pokey/rooms, pokey/usr, and pokey/usr/toukmond directories.
+ - Within toukmond's home directory, create the files cd, ftp, pwd, rlogin,
+   ssh, uncompress, and cat. In the basic test, the sizes of these files isn't
+   tested. In the full solution, however, you should use "seq 2306" to create
+   these files, so that each one's size will be 10423 bytes, just like in the
+   real game.
+Also: don't accidentally lose the first input line's data. It still needs to
+      go through the later sections.
+
+
+**************
+* Section 2: *
+**************
+One of the inputs that "find . -name 1" will find is the "filenamesdir/1". This
+line is a false match, and section 2 is where we delete it. But recall that
+the input lines are triplets, so three lines need to be deleted.
+
+
+**************
+* Section 3: *
+**************
+At this point we have the first line of a true match. It will look something
+like: "==> ./receivingRoom/description <=="
+
+This section 3 needs to shrink this line down to to just the path (eg, in the
+above example, the path is "./receivingRoom/"), then save it to the hold space,
+then empty the pattern space.
+
+
+**************
+* Section 4: *
+**************
+The behavior of Section 4 is:
+ - Get the next input line, which has a format like "Receiving room".
+ - Convert this text to its directory name on pokey (eg, "receiving-room").
+   But beware: Some of the descriptions have slashes in them:
+      % head -1 ~/_/receivingRoom/e/n/description
+      End of N/S Hallway
+      % echo "On pokey, this room is named end-of-n-s-hallway"
+ - Append the hold space to the pattern space. So now pokey's directory name
+   is before its non-pokey path.
+
+**************
+* Section 5: *
+**************
+The behavior of Section 5 is:
+ - Get the next input line, which is empty -- but which also may not exist (ie
+   for the last input). If it does not exist, you must not try to get it.
+ - Change the \n that separates the directory name from the path into @.
+ - Remove all other \n.
+
+
+**************
+* Section 6: *
+**************
+The behavior of Section 6 is:
+ - To copy the key file from "~/_/i/i" to "pokey/usr/toukmond/". If it doesn't
+   exist, there should not be an error message.
+ - To copy the description file AND all of the getable objects from the room
+   indicated by the non-pokey path over to "pokey/rooms/<pokey directory name>"
+   Note: In "PA4sol/get", we learn that "*[arokvw][maxslept]*[a-z]" can find
+         all getable objects, and this does not need to be modified much to
+	 also find "description".
+
+
+**************
+* Section 7: *
+**************
+The behavior of Section 7 is to use a UNIX "touch -r" command to give the pokey
+directory the same timestamp as the "1" file in the corresponding non-pokey
+directory.
+
+(We need to do this, because the game sorts these directories in visited-order.
+Although our solution will not be perfect, it is at least an attempt to get the
+correct order.)
+
+
+**************
+* Section 8: *
+**************
+The behavior of Section 8 is to use a UNIX "chmod -R" command to give all of
+pokey's files and directories the permissions "rwxr-wr-w".
+
+But Section 8's output should only appear once, as the final line of output.
+
+
+     
+-----------------------------------------------------------------------------
+Guidance on runpokey:
+
+To be added later...

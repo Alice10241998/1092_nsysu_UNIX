@@ -1,0 +1,28 @@
+#!/usr/bin/tcsh
+if ( ! -e ~/_/i/i/axe ) then
+   echo You have nothing you can use to break things.
+else if ( $# == 0 ) then
+   echo You must supply an object.
+else if (((x$1 =~ "x[n19defstuvw]*")&&(x$1 !~ "x[dfstuvw]?[wiola][englmvp]*"))\
+        ||( ! -e ~/_/filenamesdir/$1 )) then
+   echo I don\'t know what that is.
+else if ( ( ! -e $1 ) && ( ! -e ~/_/i/i/$1 ) ) then
+   echo I don\'t see that here.
+else if ( ( -e $1 ) && ($1 =~ *[aworkv][maxslept]*[mykdrslept] ) ) then
+   echo Your axe breaks it into a million pieces.
+   rm $1
+   if ( x$1 == xlamp ) then
+      echo "It is pitch dark.  You are likely to be eaten by a grue."|tee ~/_/grue grue de*
+   endif
+else if ( $1 == cable ) then
+   echo "As you break the ethernet cable, everything starts to blur.  You collapse@for a moment, then straighten yourself up.@@Connection closed."|tr @ \\n
+   exit 0
+else if ( -e $1 ) then
+   rm ~/_/i/i/axe
+   echo Your axe shatters into a million pieces.
+else
+   echo "You take the object in your hands and swing the axe.  Unfortunately, you miss@the object and slice off your hand.  You bleed to death.@@You are dead."|tr @ \\n
+   rm ~/_/i/i/axe
+   exit 0
+endif
+exit 1

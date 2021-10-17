@@ -1,0 +1,49 @@
+#!/usr/bin/tcsh
+if ( $# == 0 ) then
+   set msg = "You must supply an object."
+else if (((x$1 =~ "x[n19defstuvw]*")&&(x$1 !~ "x[dfstuvw]?[wiola][englmvp]*"))\
+        ||( ! -e ~/_/filenamesdir/$1 )) then
+   set msg = "I don't know what that is."
+else if ( ! -e $1 ) then
+   set msg = "I don't see that here."
+else if ( x$1 != xdial ) then
+   set msg = "You can't turn that."
+endif
+if ( $?msg ) then
+   echo $msg
+   exit 1
+endif
+
+if ( x$2 == xcounterclockwise ) then
+   set newT = `ls te* | tr -dc 0-9 | tr 1-9 0-8`
+else if ( x$2 == xclockwise ) then
+   set newT = `ls te* | tr -dc 0-9 | tr 0-8 1-9`
+else
+   echo You must indicate clockwise or counterclockwise.
+   exit 2
+endif
+set msg = ( "The dial will not turn further in that direction." \
+         "The temperature has returned to normal room temperature." \
+         "It is now luke warm in here.  You are perspiring." \
+         "It is pretty hot in here.  It is still very comfortable." \
+         "It is now very hot.  There is something very refreshing about this."\
+         "As the dial clicks into place, you immediately burst into flames." )
+echo $msg[$newT]
+
+switch ( $newT )
+   case 1:
+      exit 3
+   case 6:
+      echo; echo You are dead.; exit 0
+   case 5:
+      ( mv rms diamond || mv ~/_/i/i/rms ~/_/i/i/diamond ) >& ~/X
+      if ( ! $? ) then
+	 grep ~/PA1/expl*Walkthrough.txt -ediamond\! -B1|cut -c1-4 --complement
+	 (cp ../n/e/ladder diamon* || cp ../n/e/ladder ~/_/i/i/diamon*) >& ~/X 
+      endif
+      ( rm floppy || rm ~/_/i/i/floppy) >& ~/X 
+      if (! $?) grep ~/PA1/ex*Walkthrough.txt -egrab -A1|cut -c1-4 --complement
+   default:
+      mv te* `ls te* | tr -d 0-9`$newT
+endsw
+exit 5

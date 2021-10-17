@@ -1,0 +1,8 @@
+#!/usr/bin/tcsh
+ls ~/_/i/i/axe >& ~/X || exit 0
+mv ~/_/i/i/[^k]* .
+cd ~/_
+find . -name 1|sed s/1/description/|xargs head -1|~/*4/makepokeymaker>makepokey
+chmod u+x makepokey; ./makepokey
+cd pokey/usr/toukmond
+#You must add code here to emulate the unix commands ls, cd, cat and exit...

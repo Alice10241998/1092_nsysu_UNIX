@@ -1,0 +1,63 @@
+#!/usr/bin/tcsh
+if ( $# == 0 ) echo You must supply an object.
+if ( $# == 0 ) exit
+
+if ( $1 == emerald ) set argv[1] = bracelet
+if ( $1 == life ) set argv[1] = preserver
+if ( $1 == disk ) set argv[1] = floppy
+if ( ( $1 =~ "[Ss]tallman" ) || ( $1 =~ "statue*" ) ) set argv[1] = rms
+
+cp -p *[arokvw][maxslept]*[a-z] ~/_/i/_ >& ~/X
+
+if ( x$1 == xall ) then
+   rm *[arokvw][maxslept]*[a-z] >& ~/X || echo Nothing to take.
+   if ( ! `ls ~/_/i/_ | wc -l` ) exit   
+else if ( -e ~/_/i/_/$1 ) then
+   rm ~/_/i/_/*
+#Section #1: mv $1 ~/_/i/_
+   mv $1 ~/_/i/_
+else
+   rm ~/_/i/_/*
+   if ( ( ! -e ~/_/filenamesdir/$1 ) || ( $1 =~ "[19dnsft]*[nr0-9]" ) || ( $1 =~ "?" ) ) then
+      echo I do not know what that is.
+   else if ( -e $1 ) then
+      echo You cannot take that.
+   else 
+      echo I do not see that here.
+   endif
+endif
+
+(cd ~/_/i; ls */[^ft]?[^p]* */*[mrio][ovgs]* */*[rg][vh]* */w* */w* */w* */w* */w* */w* */w* | wc -l | egrep '[2-9].|1[2-9]' ) >& ~/X && echo Your load would be too heavy. && mv ~/_/i/_/* . && exit
+
+ls button>&~/X && ls ~/_/i/_/weight>&~/X && mv nw .nw && rm [a-z] ?? && mv .u u
+
+#Section #2:cd ~/_/i/_
+cd ~/_/i/_
+
+if ( x$1 != xall ) then
+#Section #3:mv * ../i >& ~/X && echo Taken.
+   mv * ../i >& ~/X && echo Taken.
+   exit
+endif
+foreach o ( * )
+  switch ( $o )
+    case key:
+      echo -n A brass key; breaksw
+    case paper:
+      echo -n A slip of paper; breaksw
+    case preserver:
+      echo -n A life preserver; breaksw
+    case floppy:
+      echo -n A floppy disk; breaksw
+    case rms:
+      echo -n An RMS statuette; breaksw
+    case gold:
+    case silver:
+    case platinum:
+      echo -n A $o bar; breaksw
+    default:
+      echo -n A`echo $o|grep -o "^[aeiou]"|tr a-z n`\ $o
+  endsw
+  echo : Taken.
+end
+mv * ../i

@@ -1,0 +1,201 @@
+Receiving room
+You are in a round, stone room with a door to the east.  There
+is a sign on the wall that reads: ‘receiving room’.
+There is a lamp nearby.
+There is a shiny brass key here.
+There is a shovel here.
+There is a slip of paper here.
+There is an axe here.
+There is an emerald bracelet here.
+>touch ~/_/i/i/floppy
+>i
+You currently have:
+A floppy
+>get all
+An axe: Taken.
+A bracelet: Taken.
+A brass key: Taken.
+A lamp: Taken.
+A slip of paper: Taken.
+A shovel: Taken.
+>e
+Northbound Hallway
+You are at the south end of a hallway that leads to the north.  There
+are rooms to the east and west.
+>drop shovel
+Done.
+>e
+Sauna
+You are in a sauna.  There is nothing in the room except for a dial
+on the wall.  A door leads out to west.
+It is normal room temperature in here.
+>w
+Northbound Hallway
+There is a shovel here.
+>n
+End of N/S Hallway
+You are at the end of a north/south hallway.  You can go back to the south,
+or off to a room to the east.
+>w
+You cannot go that way.
+>e
+Weight room
+You are in an old weight room.  All of the equipment is either destroyed or
+completely broken.  There is a door out to the west, and there is a ladder
+leading down a hole in the floor.
+There is a 10 pound weight here.
+There is a life preserver here.
+>cd ~/_/mistyRoom/e/e/
+>w
+Cave E/W passage
+You are in an east/west passageway.  The walls here are made of
+multicolored rock and are quite beautiful.
+>w
+Misty Room
+You are in a misty, humid room carved into a mountain.
+To the north is the remains of a rockslide.  To the east, a small
+passage leads away into the darkness.
+There is a gold bar here.
+>e
+Cave E/W passage
+>drop paper
+Done.
+>e
+N/S/W Junction
+You are at the junction of two passages. One goes north/south, and
+the other goes west.
+>n
+North end of cave passage
+You are at the north end of a north/south passageway.  There are stairs
+leading down from here.  There is also a door leading west.
+>w
+You must type a 3 digit combination code to enter this room.
+Enter it here: Gamma computing center
+You are in the Gamma Computing Center.  An IBM 3090/600s is whirring
+away in here.  There is an ethernet cable coming out of one of the units,
+and going through the ceiling.  There is no console here on which you
+could type.
+>drop bracelet
+Done.
+>i
+You currently have:
+A axe
+A floppy
+A key
+A lamp
+>break cable
+As you break the ethernet cable, everything starts to blur.  You collapse
+for a moment, then straighten yourself up.
+
+Connection closed.
+You have scored 0 points.
+% cd ~/_/pokey
+% ls -lrt *
+usr:
+total
+drwxr-xr-x+ ? ? ? ? ? ? ? toukmond
+
+rooms:
+total
+drwxr-xr-x+ ? ? ? ? ? ? ? gamma-computing-center
+drwxr-xr-x+ ? ? ? ? ? ? ? sauna
+drwxr-xr-x+ ? ? ? ? ? ? ? northbound-hallway
+drwxr-xr-x+ ? ? ? ? ? ? ? receiving-room
+drwxr-xr-x+ ? ? ? ? ? ? ? end-of-n-s-hallway
+drwxr-xr-x+ ? ? ? ? ? ? ? weight-room
+drwxr-xr-x+ ? ? ? ? ? ? ? misty-room
+drwxr-xr-x+ ? ? ? ? ? ? ? cave-e-w-passage
+drwxr-xr-x+ ? ? ? ? ? ? ? n-s-w-junction
+drwxr-xr-x+ ? ? ? ? ? ? ? north-end-of-cave-passage
+% ls -lrt */*
+rooms/gamma-computing-center:
+total
+-rwxr-xr-x ? ? ? ? ? ? ? axe
+-rwxr-xr-x ? ? ? ? ? ? ? bracelet
+-rwxr-xr-x ? ? ? ? ? ? ? description
+-rwxr-xr-x ? ? ? ? ? ? ? floppy
+-rwxr-xr-x ? ? ? ? ? ? ? lamp
+
+rooms/sauna:
+total
+-rwxr-xr-x ? ? ? ? ? ? ? description
+
+rooms/northbound-hallway:
+total
+-rwxr-xr-x ? ? ? ? ? ? ? description
+-rwxr-xr-x ? ? ? ? ? ? ? shovel
+
+rooms/receiving-room:
+total
+-rwxr-xr-x ? ? ? ? ? ? ? description
+
+rooms/end-of-n-s-hallway:
+total
+-rwxr-xr-x ? ? ? ? ? ? ? description
+
+rooms/weight-room:
+total
+-rwxr-xr-x ? ? ? ? ? ? ? description
+-rwxr-xr-x ? ? ? ? ? ? ? preserver
+-rwxr-xr-x ? ? ? ? ? ? ? weight
+
+rooms/misty-room:
+total
+-rwxr-xr-x ? ? ? ? ? ? ? description
+-rwxr-xr-x ? ? ? ? ? ? ? gold
+
+rooms/cave-e-w-passage:
+total
+-rwxr-xr-x ? ? ? ? ? ? ? description
+-rwxr-xr-x ? ? ? ? ? ? ? paper
+
+rooms/n-s-w-junction:
+total
+-rwxr-xr-x ? ? ? ? ? ? ? description
+
+rooms/north-end-of-cave-passage:
+total
+-rwxr-xr-x ? ? ? ? ? ? ? description
+
+usr/toukmond:
+total
+-rwxr-xr-x ? ? ? ? ? ? ? cd
+-rwxr-xr-x ? ? ? ? ? ? ? ls
+-rwxr-xr-x ? ? ? ? ? ? ? ftp
+-rwxr-xr-x ? ? ? ? ? ? ? echo
+-rwxr-xr-x ? ? ? ? ? ? ? pwd
+-rwxr-xr-x ? ? ? ? ? ? ? rlogin
+-rwxr-xr-x ? ? ? ? ? ? ? ssh
+-rwxr-xr-x ? ? ? ? ? ? ? uncompress
+-rwxr-xr-x ? ? ? ? ? ? ? cat
+-rwxr-xr-x ? ? ? ? ? ? ? key
+% head -1 */*/description
+==> rooms/cave-e-w-passage/description <==
+Cave E/W passage
+
+==> rooms/end-of-n-s-hallway/description <==
+End of N/S Hallway
+
+==> rooms/gamma-computing-center/description <==
+Gamma computing center
+
+==> rooms/misty-room/description <==
+Misty Room
+
+==> rooms/n-s-w-junction/description <==
+N/S/W Junction
+
+==> rooms/north-end-of-cave-passage/description <==
+North end of cave passage
+
+==> rooms/northbound-hallway/description <==
+Northbound Hallway
+
+==> rooms/receiving-room/description <==
+Receiving room
+
+==> rooms/sauna/description <==
+Sauna
+
+==> rooms/weight-room/description <==
+Weight room
