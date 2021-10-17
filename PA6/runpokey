@@ -1,0 +1,73 @@
+#!/usr/bin/tcsh
+rm -rf ~/_/pokey
+ls ~/_/i/i/axe >& ~/X || exit 0
+mv ~/_/i/i/[^k]* .
+cd ~/_
+find . -name 1|sed s/1/description/|xargs head -1|~/*4/makepokeymaker>makepokey
+chmod u+x makepokey; ./makepokey
+(cd ~/_/pokey;find . -type f -name '[^cu]*[^iwt][etdyprmls]' | sed 's/.*/touch &.o; rm -f &/') > makepokey2
+chmod u+x makepokey2; cd pokey; ../makepokey2
+find . -name "*" | xargs touch -t 197001010101
+find . -name "*" -type f | xargs touch -t 197101010101
+find . -name "*.o" | xargs touch -t 197201010101
+
+#echo | awk -f PA6.awk|exit
+
+cd usr/toukmond
+while ( 1 )
+   echo -n '$ '
+   set x = $<:q
+   echo $x:q
+   set x = ( `echo _$x:q | sed 's/\<-/\\-/g;' | tr '[?*' '\r\v\b'` )
+   if ( $#x == 0 ) continue
+   if ( $x[1] == _cat ) then
+      if ( $#x == 1 ) then
+         echo "Usage: cat <ascii-file-name>"
+	 continue
+      else if ( _$x[2]:q =~ */* ) then
+         echo cat: only files in current directory allowed.
+      else if ( ! -f $x[2]:q ) then
+         echo File not found.
+      else if ( _$x[2]:q == _description ) then
+         cat description
+      else
+         echo Ascii files only.
+      endif
+   else if ( $x[1]:q == _exit ) then
+      exit
+   else if ( $x[1]:q == _pwd ) then
+      pwd | sed 's/.*pokey//;s_$_/_'
+   else if ( $x[1]:q == _echo ) then
+      echo "$x[2-]"
+   else if ( ( $x[1]:q != _ls ) && ( $x[1]:q != _cd ) ) then
+      echo "`echo $x[1]:q|sed s,.,, | tr \\r\\v\\b \[\?\*`: not found."
+   else
+      if ( $#x == 1 ) then
+         if ($x[1]:q == _cd ) then
+	    echo "Usage: cd <path>"
+	    continue
+         endif
+	 set x = ( $x . )
+      endif	 
+
+      if ( _$x[2]:q =~ "_/*" ) then
+	 set x[2] = `echo ~/_/pokey$x[2]:q`
+      else if ( _$x[2]:q =~ "_?*/*" ) then
+         set x[2] = `(pwd;echo $x[2]:q)|tr '\n' '/'`
+      endif
+      if ( ! -d $x[2] ) then
+         echo No such directory.
+      else if ( $x[1] == _cd ) then
+         cd $x[2]
+      else if ( $x[1] == _ls ) then
+         ls -rtl $x[2] | sed 's/  */ /g' | cut -f3,4 --complement -d\ |sed \
+	  's/+//; s/197[12]/1970/; s/  */ /g; /toukmond/\!{/^d/bY};\
+           /des/\!s/ . /@/; :Y; /@/\!s/ . /~/; s/~[^ ]\{2,\}/~2048/'|sed '\
+           2{h; s/./d/; s/[^ ]*$/./; s/[~@][0-9]*/~2048/;\
+             s/.*/&\n&./; G; /10423/s/~/@/; s/2048/512/;};\
+           s/~/ 3 root     staff~/g; s/@/ 1 toukmond restricted~/g;\
+           s/~/             ~/g; s/\([~@]\)\([^ ]*\)/\2\1/g; tZ;\
+          :Z; s/\([^\n]\{36\}\) \(.....\)~/\1\2~/; tZ; s/~//g'
+      endif
+   endif
+end	 

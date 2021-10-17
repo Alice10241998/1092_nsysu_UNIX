@@ -1,0 +1,246 @@
+                          Programming Assignment #6
+                 "Calling a program from within a UNIX shell
+                       in order to emulate a UNIX shell
+                       that is being run within a game
+                     that is run within an emacs editor"
+
+
+Due date: June 19th, at 11:59pm
+
+
+Submission method: Upload 1 file, PA6.awk, to the cyber university.
+
+
+Assignment details:
+
+Let's look at the directory containing this current README file:
+   % ls
+   README  checkYourOutputPA6.sh  makepokeymaker  runpokey
+   break2  expectedOutputPA6.txt  pokeyInput      testInputPA6.sh
+   %
+
+The first thing that we notice is that the solution to the last homework is
+provided (actually, as we will see below, the provided runpokey does much more
+than in the previous homework).
+
+The second thing we notice is that not all files for a full game are provided.
+This is because these provided files are meant to be copied into your old PA4
+directory. Look at the check script, and notice that it runs from ~/PA4:
+   % cat checkYourOutputPA6.sh
+   echo "Be patient. This might take up to 2 minutes to run..."
+   (source ~/PA4/testInputPA6.sh>~/PA4/testOutputPA6.txt)
+   echo ______________________________________________________________________
+   echo Finished Running. Now checking for differences to the expected output:
+   cd ~/PA4
+   diff testOutputPA6.txt expectedOutputPA6.txt&&echo You passed the basic test
+   %
+
+As we see above, the check script runs testInputPA6.sh. So let's look at that:
+   % tail -4 testInputPA6.sh
+   echo ">w";w
+   echo ">drop bracelet";drop bracelet
+   echo ">i";i
+   echo ">break cable";break cable
+   %
+
+So the test input is basically the same as for the previous homework. This test
+ends when the cable breaks. So let's next look at break2:
+   % head -1 break2
+   ~/PA4/break $*&&~/PA4/runpokey<~/PA4/pokeyInput &&sed 1d<~/PA4/break2 &&quit
+
+As we see, the runpokey script is provided input from "pokeyInput". We'll look
+at that file in a moment. First, however, notice also that the above line has
+a weird "sed 1d<~/PA4/break2" command. This command displays the rest of the
+break2 file. So let's look at the whole file:
+   % cat break2
+   ~/PA4/break $*&&~/PA4/runpokey<~/PA4/pokeyInput &&sed 1d<~/PA4/break2 &&quit
+   
+   You step back from the console.
+   
+   Computer room
+   You are in a computer room.  It seems like most of the equipment has
+   been removed.  There is a VAX 11/780 in front of you, however, with
+   one of the cabinets wide open.  A sign on the front of the machine
+   says: This VAX is named ‘pokey’.  To type on the console, use the
+   ‘type’ command.  The exit is to the east.
+   The panel lights are flashing in a seemingly organized pattern.
+   >quit
+   
+   %
+
+As we see above, the first line of the break2 file is UNIX code, but the rest
+of the lines are text. This is not a problem, however, because the first line
+ends with "quit", so the later lines are never run. The second thing to notice
+is that the above text is what displays when you type "exit" while logged into
+pokey. The third thing to notice is that the end of the output text is ">quit".
+This is because we do not want to implement anything about the game after you
+exit pokey.
+
+So now, we can move on to look at that pokeyInput file that break2's first line
+made use of:
+   % head -7 pokeyInput
+   ls
+   echo
+   cd
+   pwd
+   cat
+   echo x
+   cd x
+   %
+
+So it is a bunch of tests to see if your runpokey script works. Let's see what
+output is expected for the above commands:
+   % grep 'Connection closed' -A26 expectedOutputPA6.txt
+   Connection closed.
+   $ ls
+   total 108
+   drwxr-xr-x 1 toukmond restricted      512 Jan 1 1970 .
+   drwxr-xr-x 3 root     staff          2048 Jan 1 1970 ..
+   -rwxr-xr-x 1 toukmond restricted    10423 Jan 1 1970 uncompress
+   -rwxr-xr-x 1 toukmond restricted    10423 Jan 1 1970 ssh
+   -rwxr-xr-x 1 toukmond restricted    10423 Jan 1 1970 rlogin
+   -rwxr-xr-x 1 toukmond restricted    10423 Jan 1 1970 pwd
+   -rwxr-xr-x 1 toukmond restricted    10423 Jan 1 1970 ls
+   -rwxr-xr-x 1 toukmond restricted    10423 Jan 1 1970 ftp
+   -rwxr-xr-x 1 toukmond restricted    10423 Jan 1 1970 echo
+   -rwxr-xr-x 1 toukmond restricted    10423 Jan 1 1970 cd
+   -rwxr-xr-x 1 toukmond restricted    10423 Jan 1 1970 cat
+   -rw-r--r-- 1 toukmond restricted        0 Jan 1 1970 key.o
+   $ echo
+   
+   $ cd
+   Usage: cd <path>
+   $ pwd
+   /usr/toukmond/
+   $ cat
+   Usage: cat <ascii-file-name>
+   $ echo x
+   x
+   $ cd x
+   No such directory.
+   %
+
+In the above ls output, the ordering can vary. But a partial order is required:
+   1. "."
+   2. ".."
+   3. Any subdirectories, in any order. (I gave up on the idea, from the last
+      homework, of keeping the directories in the order they were visited.)
+   4. Any of these, in any order: {cat, cd, echo, ftp, ls, pwd, rlogin, ssh,
+      uncompress, or description (if you are in a rooms subdirectory)}
+   5. Any *.o files, in any order.
+
+Note that the outputs in the expected output file are the same as what the
+dunnet game produces, which is not the same as what a real UNIX system would
+perform. If you want to know other output conditions besides the ones provided
+in the test input, you can try out the commands on the real game.
+
+
+Now it is time to look at the final provided file, runpokey. This file contains
+a Cshell program to emulate the dunnet game's emulation of the UNIX on pokey.
+Looking at this cshell program is a good final exam review. You will notice
+that I did many tricks, such as putting a "_" in front of user input, in order
+to prevent the possibility that the user would type a "-". For example, notice
+how those special symbols are treated by the real game:
+   % emacs -batch -l dunnet
+   
+   Dead end
+   You are at a dead end of a dirt road.  The road goes to the east.
+   .
+   .
+   .
+   >break cable
+   As you break the ethernet cable, everything starts to blur.  You collapse
+   for a moment, then straighten yourself up.
+   
+   Connection closed.
+   $ echo -n Hi
+   -n hi
+   $ *
+   *: not found.
+   $ -e key.o
+   -e: not found.
+   $
+
+So, in runpokey, I dealt with these cases with:
+   % grep '$<' -A2 runpokey
+      set x = $<:q
+      echo $x:q
+      set x = ( `echo _$x:q | sed 's/\<-/\\-/g;' | tr '[?*' '\r\v\b'` )
+   %
+
+Now these special symbols won't have the same difficulties in awk as they have
+in UNIX. So you will not need to worry about some of those things in your new
+implementation.
+
+Q1: But what is this new implementation that you will need to do?
+A1: The runpokey file that I am giving you is Cshell. You need to re-implement
+    it in Awk. Step 1 of your solution is to remove the "#" in the code below:
+       % grep PA6.awk runpokey -A5
+       #echo | awk -f PA6.awk|exit
+
+       cd usr/toukmond
+       while ( 1 )
+          echo -n '$ '
+          set x = $<:q
+       %
+    You see? If you uncomment that line, then PA6.awk will need to do the job
+    that my runpokey script is doing.
+
+Q2: But how can you achieve the behavior of "set x = $<:q"?
+A2: Review the slides on "getline".
+
+Q3: But how can you achieve the directory changing behavior of runpokey?
+A3: Consider the following awk behavior:
+       % echo | awk '{system("pwd");system("cd PA6;pwd");system("pwd")}'
+       /home/Me
+       /home/Me/PA6
+       /home/Me
+       %
+
+    Notice that awk cannot remember the effect of a 'system("cd ...")'. (And
+    this forgetting is not surprising, since we know that UNIX shells also have
+    trouble remembering cd's from subshells: "% pwd;(cd PA6;pwd);pwd".)
+    But notice also that the 2nd of the three system calls above had run two
+    commands: "cd PA6;pwd". So you can insert a cd before the real command that
+    you want to run, so it can be in the right place. You can even automate it:
+       % echo |\
+       ? awk 'function sys(x){system("cd "P";"x)}BEGIN{P="~/PA6"}{sys("pwd")}'
+       /home/Me/PA6
+       %
+
+Q4: How do you get the correct "ls" formatting?
+A4: In runpokey, I have implemented it in sed. Since you can use a system()
+    command in awk, you can use my sed code from within your awk program. (But
+    if you do it this way, you will lose some points.)
+
+Q5: Why would you lose points?
+A5: You should not abuse the system command to just cut-and-paste all of my
+    runpokey parts into awk. If you do so, you will pass the basic test, so
+    you will get at least 50%. But for full points, implement everything in
+    awk, unless: it needs a system() command to work (eg, getting the ls -lrt
+    input or displaying a description file.
+
+Q6: How to get started?
+A6: First create a version of PA6.awk which does use system calls to cut-and-
+    pasted versions of my runpokey code. Then, when it passes the test, start
+    removing the system() calls -- one at a time, testing each before changing
+    the next (and saving backup copies before each change).
+
+Q7: Why is my runpokey's ls command so complicated? Some formatting was done
+    at the top of the script (eg, the file dates), but other parts weren't (eg
+    the file owners).
+A7: I set the dates early because I could, and I did not set the file owners
+    early because I couldn't. Since toukmond is not a user on my computer, I
+    could not use chown to make him the owner. So things like that have to be
+    done in the complicated way that runpokey uses. This is also why I set some
+    dates as 1971 or 1972: it allowed ls -lrt to put in the right order (and
+    I then just make them all display as 1970). It is also why I did not use
+    ls -lrta: the -a was not consistently putting the . and .. at the top (so,
+    instead, I don't use -a, but I just insert those two lines at the top of
+    the list).
+
+Q8: Does my output need to match exactly?
+A8: Yes, with two exceptions:
+    1. The ordering of "ls" listings within groups doesn't matter (See lines
+       123-130, above).
+    2. The "total" lines at the top of the ls listings will not be the same.
