@@ -1,0 +1,1034 @@
+To play the game, you first type bash, then you run the Homework script:
+    % bash;source ~/PA2/PA2.sh
+    Receiving room
+    You are in a round, stone room with a door to the east.  There
+    is a sign on the wall that reads: ‘receiving room’.
+    There is a lamp nearby.
+    There is a shiny brass key here.
+    There is a shovel here.
+    There is a slip of paper here.
+    There is an axe here.
+    There is an emerald bracelet here.
+    >
+
+The above looks just like it looked in the explanatoryWalkthrough.txt file
+from the previous homework.
+
+Moving on:
+    >x shovel
+    It is a normal shovel with a price tag attached that says $19.99.
+    >e
+    Northbound Hallway
+    You are at the south end of a hallway that leads to the north.  There
+    are rooms to the east and west.
+    >e
+    Sauna
+    You are in a sauna.  There is nothing in the room except for a dial
+    on the wall.  A door leads out to west.
+    It is normal room temperature in here
+    >x dial
+    The dial points to a temperature scale which has long since faded away.
+    >w
+    Northbound Hallway
+    >d
+    You cannot go that way.
+    >
+Most of these above behaviors are just like in the original dunnet game. The
+only difference is that we did not get warned about the grue when we entered
+the sauna. That part of the game will not be implemented until the next
+homework.
+
+Moving on:
+    >w
+    Receiving room
+    There is a lamp nearby.
+    There is a shiny brass key here.
+    There is a shovel here.
+    There is a slip of paper here.
+    There is an axe here.
+    There is an emerald bracelet here.
+    >x lamp
+    The lamp is hand-crafted by Geppetto.
+    >i
+    You currently have:
+    >
+The above is also just like the original game. Notice that our inventory is
+empty.
+
+You implement the inventory by putting things in the directory ~/PA2/rooms/i/i.
+The game starts with nothing in your inventory, so this directory is empty:
+    >ls ~/PA2/rooms/i/i
+    >echo something > ~/PA2/rooms/i/i/something
+    >echo somethingelse > ~/PA2/rooms/i/i/somethingelse
+    >ls ~/PA2/rooms/i/i | xargs echo | fold -sw75
+    >something somethingelse
+    >i
+    You currently have:
+    A something
+    A somethingelse
+    >rm ~/PA2/rooms/i/i/s*
+    >ls ~/PA2/rooms/i/i
+    >i
+    You currently have:
+    >
+The above proves the "i" command is displaying what is in the ~/PA2/rooms/i/i
+directory (If we put weird files in the directory, the "i" command lists them).
+
+But how do we properly put things into our inventory? We "get" them. But our
+get command will be a little different than the original game:
+    >get all
+    bash: get: command not found
+    >getall
+    Taken: a axe
+    Taken: a bracelet
+    Taken: a key
+    Taken: a lamp
+    Taken: a paper
+    Taken: a shovel
+    >
+In the real game, we would have typed "get all", but we see that typing that
+doesn't work. For now, we can only use one-word commands, so we typed "getall".
+This difference arises because aliases cannot use arguments. (Please note,
+this is not a problem of the alias command; it is just that we are trying to
+write a game with only two weeks of UNIX lectures. You should just be impressed
+that UNIX is powerful enough that we can make something work, despite not yet
+knowing many commands or knowing how to create variables, loops, etc.)
+
+But, is it really true that aliases can't use arguments? Didn't we examine the
+shovel, by typing "x shovel"? Isn't "x" an alias and isn't "shovel" an argument
+to the "x" alias? Well, yes, it is. We use "x" as an alias for "cat". When we
+typed "x shovel", the x was replaced and it became "cat shovel". In the first
+homework, we had inserted a file named shovel in the receivingRoom directory.
+And the contents of that file was, in fact: "It is a normal shovel with a price
+tag attached that says $19.99."
+
+So when I say that alias cannot use arguments, I mean we can't do something 
+like this:
+    % alias x2='cat [arg] || echo I do not see that here.'
+    % x2 shovel
+    cat: '[arg]': No such file or directory
+    I do not see that here. shovel
+    %
+See? the argument to the alias just went at the end. That means that, in this
+case, it became a second argument to the echo command, meaning that we actually
+had run this:
+    % cat [arg] || echo I do not see that here. shovel
+    cat: '[arg]': No such file or directory
+    I do not see that here. shovel
+    %
+
+The problem isn't that "[arg]" is the wrong syntax; rather, the problem is
+that there is no right syntax. As a consequence, our "x" command only works
+on objects that are in our current room. It doesn't work on objects in our
+inventory (unlike how the real game does), and it doesn't print the best error
+message when it fails. Compare:
+    Programming Assignment #2:            The Real Dunnet Game:
+    % bash                                >restore savedgame
+    % source ~/PA2/PA2.sh                 Done.
+    Receiving room                        Receiving room
+    You are in a round, stone room wit... You are in a round, stone room wit...
+    is a sign on the wall that reads: ... is a sign on the wall that reads: ...
+    There is a lamp nearby.               There is a lamp nearby.
+    There is a shiny brass key here.      There is a shovel here.
+    There is a shovel here.               There is a shiny brass key here.
+    There is a slip of paper here.        There is an emerald bracelet here.
+    There is an axe here.                 There is a slip of paper here.
+    There is an emerald bracelet here.    There is an axe here.
+    >x lamp                               >x lamp
+    The lamp is hand-crafted by Geppet... The lamp is hand-crafted by Geppet...
+    >getall                               >get all
+    Taken: a axe                          A lamp: Taken.
+    Taken: a bracelet                     A shovel: Taken.
+    Taken: a key                          A brass key: Taken.
+    Taken: a lamp                         A bracelet: Taken.
+    Taken: a paper                        A slip of paper: Taken.
+    Taken: a shovel                       An axe: Taken.
+    >e                                   >e
+    Northbound Hallway                    Northbound Hallway
+    You are at the south end of a hall... You are at the south end of a hall...
+    are rooms to the east and west.       are rooms to the east and west.
+    >x lamp                               >x lamp
+    cat: lamp: No such file or directory  The lamp is hand-crafted by Geppet...
+    >x dial                               >x dial
+    cat: dial: No such file or directory  I don't see that here.
+    >x yz                                 >x yz
+    cat: yz: No such file or directory    I don't know what that is.
+    >e                                   >e
+    Sauna                                 Sauna
+    You are in a sauna.  There is noth... You are in a sauna.  There is noth...
+    on the wall.  A door leads out to ... on the wall.  A door leads out to ...
+    It is normal room temperature in h... It is normal room temperature in h...
+    >x dial                               >x dial
+    The dial points to a temperature s... The dial points to a temperature s...
+    >x shovel                             >x shovel
+    cat: shovel: No such file or direc... It is a normal shovel with a price...
+    >                                     >
+
+From the above, we see exactly the problems just described: 1) we can't examine
+the shovel or lamp when they are in our inventory, but only when they are in
+the room, and 2) rather that getting the meaningful messages: "I don't see that
+here." and "I don't know what that is.", we instead get the ugly message, "cat:
+...: No such file or directory". (Can we do better? The answer is yes, but only
+in homework #3.) For now, once again, just be amazed that we can write so much
+of the game by just tricking UNIX into becoming the game, without writing an
+actual program.
+
+In the above, we also see that the messages generated for "getall" are slightly
+different from those that the real game generates for "get all". The output,
+though different, looks OK as it is. But it can be improved in later homeworks.
+
+Anyway, let's restart playing our current game:
+    % bash;source ~/PA2/PA2.sh
+    Receiving room
+    You are in a round, stone room with a door to the east.  There
+    is a sign on the wall that reads: ‘receiving room’.
+    There is a lamp nearby.
+    There is a shiny brass key here.
+    There is a shovel here.
+    There is a slip of paper here.
+    There is an axe here.
+    There is an emerald bracelet here.
+    >e
+    Northbound Hallway
+    You are at the south end of a hallway that leads to the north.  There
+    are rooms to the east and west.
+    >n
+    End of N/S Hallway
+    You are at the end of a north/south hallway.  You can go back to the south,
+    or off to a room to the east.
+    >e
+    Weight room
+    You are in an old weight room.  All of the equipment is either destroyed or
+    completely broken.  There is a door out to the west, and there is a ladder
+    leading down a hole in the floor.
+    There is a 10 pound weight here.
+    There is a life preserver here.
+    >
+
+Let's consider the objects in this room:
+    >x weight
+    You observe that the weight is heavy.
+    >x ladder
+    It is a normal ladder that is permanently attached to the hole.
+    >x preserver
+    It says S. S. Minnow.
+    >x life
+    cat: life: No such file or directory
+    >
+From the above, we see that the word "life" is not a synoym for "preserver"
+(but they are synonyms in the real game). We will fix this in the next
+programming assignment.
+
+Now, let's see if the maze passage is properly closed:
+    >d
+    Maze button room
+    You are in a maze of twisty little passages, all alike.
+    There is a button on the ground here.
+    >nw
+    You cannot go that way.
+    >u
+    Weight room
+    There is a 10 pound weight here.
+    There is a life preserver here.
+    >
+From the above, we see that the maze is currently working correctly. That is to
+say: the button isn't pressed, and we can't move nw (but can go up the ladder).
+
+Let's try to press the button:
+    >d
+    Maze button room
+    >x button
+    As you press the button, you notice a passageway open up, but
+    as you release it, the passageway closes.
+    >press button
+    As you press the button, you notice a passageway open up, but
+    as you release it, the passageway closes.
+    >nw
+    You cannot go that way.
+    >
+    
+So it looks like "press" behaves just like "x". But this is not actually true,
+as we will see if we try pressing anything other than the button:
+    >press ladder
+    You cannot press that.
+    >x ladder
+    It is a normal ladder that is permanently attached to the hole.
+    >press lamp
+    bash: lamp: No such file or directory
+    >x lamp
+    cat: lamp: No such file or directory
+    >
+
+Objects that are present are said to not be pressable, rather than displaying
+their descriptions. Objects that are not present still create an ugly error
+message, but it is a different ugly message than the one generated by "x".
+The PA2assignment.txt file describes how to implement "press", and explains why
+it acts a little differently than "x".
+
+Anyway, let's try getting the button to be pressed by the weight:
+    >drop weight
+    bash: drop: command not found
+    >dropweight
+    You do not have that.
+    >
+From the above, we see that the "drop weight" command has been replaced by
+"dropweight". This was done for the exact same reason as why we had to use
+"getall" instead of "get all". This problem will be resolved in the next
+programming assignment. Of course we could not drop it, since we don't have it.
+So, let's get it:
+    >u
+    Weight room
+    There is a 10 pound weight here.
+    There is a life preserver here.
+    >getall
+    Taken: a preserver
+    Taken: a weight
+    >
+From the above, we see that there is no weight limit in this homework. In the
+real game, it would have said that this was too heavy. We will implemented
+that in the next assignment.
+
+Let's drop the weight:
+    >dropweight
+    Done.
+    >d
+    Maze button room
+    There is a button on the ground here.
+    >u
+    Weight room
+    There is a 10 pound weight here.
+    >
+From the above, we see that dropping the weight in the wrong room does not
+press the button (ie, we can still go up the ladder).
+
+So, let's drop it correctly: 
+    >getall
+    Taken: a weight
+    >d
+    Maze button room
+    There is a button on the ground here.
+    >dropweight
+    Done.
+    A passageway opens.
+    >l
+    Maze button room
+    You are in a maze of twisty little passages, all alike.
+    There is a 10 pound weight here.
+    There is a button on the ground here.
+    >i
+    You currently have:
+    A preserver
+    >u
+    You cannot go that way.
+    >
+From the above we see that the button is pressed, because we cannot go up.
+
+Now let's pick up the weight and see what happens:
+    >getall
+    Taken: a weight
+    >u
+    You cannot go that way.
+    >
+From the above, we see that the button did not get unpressed. This is a problem
+that we will not fix until the next programming assignment.
+
+Now let's get through the maze:
+    >nw
+    Maze
+    You are in a maze of little twisty passages, all alike.
+    >u
+    Maze 
+    You are in a maze of thirsty little passages, all alike.
+    There is a floppy disk here.
+    There is a wax statuette of Richard Stallman here.
+    >getall
+    Taken: a floppy
+    Taken: a rms
+    >se
+    Maze  
+    You are in a maze of twenty little passages, all alike.
+    >d
+    Maze   
+    You are in a daze of twisty little passages, all alike.
+    >nw
+    Maze    
+    You are in a maze of twisty little cabbages, all alike.
+    >ne
+    Weight room
+    >
+We made it through the maze. We need to now pick up our items (but we won't use
+the sauna to melt the wax statuette, until a later homework):
+    >w
+    End of N/S Hallway
+    >s
+    Northbound Hallway
+    >w
+    Receiving room
+    There is a lamp nearby.
+    There is a shiny brass key here.
+    There is a shovel here.
+    There is a slip of paper here.
+    There is an axe here.
+    There is an emerald bracelet here.
+    >getall
+    Taken: a axe
+    Taken: a bracelet
+    Taken: a key
+    Taken: a lamp
+    Taken: a paper
+    Taken: a shovel
+    >dropweight
+    Done.
+    >
+
+Now let's get through the maze, to the outside:
+    >e
+    Northbound Hallway
+    >n
+    End of N/S Hallway
+    >e
+    Weight room
+    >d
+    Maze button room
+    >nw
+    Maze
+    >u
+    Maze 
+    >se
+    Maze  
+    >d
+    Maze   
+    >nw
+    Maze    
+    >nw
+    Reception area
+    You are in a reception area for a health and fitness center.  The place
+    appears to have been recently ransacked, and nothing is left.  There is
+    a door out to the south, and a crawlspace to the southeast.
+    >
+At this point we are ready to go outside. In the real game, this could kill you
+by fire or water. But death will only be added in programming assignment #3.
+
+So we can proceed without fear:
+    >s
+    Health Club front
+    You are outside a large building to the north which used to be a health
+    and fitness center.  A road leads to the south.
+    >s
+    Lakefront North
+    You are at the north side of a lake.  On the other side you can see
+    a road which leads to a cave.  The water appears very deep.
+    >x lake
+    I see nothing special about that.
+    >s
+    Lakefront South
+    You are at the south side of a lake.  A road goes to the south.
+    >s
+    Cave Entrance
+    The entrance to a cave is to the south.  To the north, a road leads
+    towards a deep lake.  On the ground nearby there is a chute, with a sign
+    that says ‘put treasures here for points’.
+    >x chute
+    I see nothing special about that.
+    >
+
+At this point, it is time to keep score. We currently have one treasure, the
+bracelet. In the real game, we have to type "put bracelet in chute". But to
+implement this, we would need our alias to accept arguments. So this will not
+be implemented until programming assignment #3.
+
+For now, we will just implement "put" with no arguments. It's meaning is as
+follows: 1) if you are in a room that has a way to store treasure (ie, the
+chute or the urinal), and 2) if you have a treasure (ie, the bracelet and/or
+the gold), then move those treasure(s) from you inventory to somewhere we'll
+describe in a moment. So let's see if "put" behaves as we expect:
+    >n
+    Lakefront South
+    >put
+    Nothing to put treasures into.
+    >score
+    You have scored 00 points.
+    >i
+    You currently have:
+    A axe
+    A bracelet
+    A floppy
+    A key
+    A lamp
+    A paper
+    A preserver
+    A rms
+    A shovel
+    >s
+    Cave Entrance
+    >put
+    You hear it slide down the chute and off into the distance.
+    You have scored 10 points.
+    >
+Yes, the above did behave as expected. We start out with a score of 0 (although
+we use two digits, 00), and you must be next to the chute to put the bracelet
+into it.
+
+So we would expect that, now that we don't have the bracelet, we won't be able
+to put anything into the chute (in the actual game, other things can go into
+the chute, but they give no points). Let's see if the game gets this right:
+    >put
+    No treasure to put into it.
+    >n
+    Lakefront South
+    >put
+    Nothing to put treasures into.
+    >i
+    You currently have:
+    A axe
+    A floppy
+    A key
+    A lamp
+    A paper
+    A preserver
+    A rms
+    A shovel
+    >score
+    You have scored 10 points.
+    >
+
+So that all works. But where did the bracelet go? Well, let's see:
+    >ls ~/PA2/rooms | xargs echo | fold -sw75
+    There buttonRoom es i mistyRoom receivingRoom treasureRoom
+    >cd ~/PA2/rooms/treasureRoom/
+    >ls | xargs echo | fold -sw75
+    9 bracelet description
+    >l
+    Treasure room
+    You are in the treasure room.  A door leads out to the north.
+    There is an emerald bracelet here.
+    >n
+    You cannot go that way.
+    >
+There is actually a treasure room. (This is literally true: if you were to play
+all of the levels of the game, you would end up in this room.) I used "cd" to
+cheat and enter the treasure room without completing the game. When I tried to
+go north, however, it did not work. That is because we are not implementing
+this part of the game. (We are implementing the treasure room itself, however,
+because this is used to calculate the score.)
+
+So let's move on:
+    >mv 1 9
+    >cd ~/_/buttonRoom/nw/u/se/d/nw/nw/s/s/s
+    >s
+    Cave Entrance
+    >s
+    Misty Room
+    You are in a misty, humid room carved into a mountain.
+    To the north is the remains of a rockslide.  To the east, a small
+    passage leads away into the darkness.
+    There is a gold bar here.
+    >n
+    You cannot go that way.
+    >basename `pwd`
+    mistyRoom
+    >
+
+We can't go back. We are now in ~/PA2/rooms/mistyRoom. Let's get more treasure:
+    >getall
+    Taken: a gold
+    >e
+    Cave E/W passage
+    You are in an east/west passageway.  The walls here are made of
+    multicolored rock and are quite beautiful.
+    >e
+    N/S/W Junction
+    You are at the junction of two passages. One goes north/south, and
+    the other goes west.
+    >s
+    South end of cave passage
+    You are at the south end of a north/south passageway.  There is a hole
+    in the floor here, into which you could probably fit.
+    >d
+    Bathroom
+    You are in a bathroom built for workers in the cave.  There is a
+    urinal hanging on the wall, and some exposed pipes on the opposite
+    wall where a sink used to be.  To the north is a bedroom.
+    >i
+    You currently have:
+    A axe
+    A floppy
+    A gold
+    A key
+    A lamp
+    A paper
+    A preserver
+    A rms
+    A shovel
+    >
+
+Now we are in the place where we can store the treasure, and we have the gold.
+So let's try to put it in the urinal:
+    >score
+    You have scored 10 points.
+    >put
+    You hear it plop down in some water below.
+    >score
+    You have scored 10 points.
+    >
+Hey! Why didn't I get any points for the gold?
+
+I did drop it, didn't I? Let's check:
+    >i
+    You currently have:
+    A axe
+    A floppy
+    A key
+    A lamp
+    A paper
+    A preserver
+    A rms
+    A shovel
+    >
+Yes, I don't have it anymore. But if it was in the treasure room I'd have my
+points wouldn't I?:
+    >ls ~/PA2/rooms/treasureRoom/ | xargs echo | fold -sw75
+    9 bracelet description
+    >
+Correct. If it were in the treasure room, I would get my points. But it isn't
+there.
+
+Where is it? I've put it in the urinal here, so maybe it's still in the room?:
+    >l
+    Bathroom
+    You are in a bathroom built for workers in the cave.  There is a
+    urinal hanging on the wall, and some exposed pipes on the opposite
+    wall where a sink used to be.  To the north is a bedroom.
+    >getall
+    Nothing to take.
+    >
+No, the gold is not here either. It is simply gone.
+
+Well, let's think about this. The game said, "You hear it plop down in some 
+water below." That is why I cannot get it back. The next step in the game is
+to flush it out of the pipe:
+    >ls ~/PA2/rooms/treasureRoom/ | xargs echo | fold -sw75
+    9 bracelet description
+    >score
+    You have scored 10 points.
+    >flush
+    Whoooosh!!
+    You have scored 20 points.
+    >ls ~/PA2/rooms/treasureRoom/ | xargs echo | fold -sw75
+    9 bracelet description gold
+    >
+
+There is another point to make about the treasures. The game lets other items
+get put into the treasure room. Although our put command will not allow this
+(until the next homework), we can still make it happen, by simply putting those
+items directly into the treasure room from our inventory:
+    >mv ~/PA2/rooms/i/i/* ~/PA2/rooms/treasureRoom/
+    >ls ~/PA2/rooms/treasureRoom/ | xargs echo | fold -sw75
+    9 axe bracelet description floppy gold key lamp paper preserver rms shovel
+    >i
+    You currently have:
+    >score
+    You have scored 20 points.
+    >
+From the above, we see that the score command knows that only the gold and the
+bracelet are worth points. (Each treasure in the game is worth 10 points.)
+
+Let's take all of the items back out of the treasure room:
+    >mv ~/PA2/rooms/treasureRoom/[^9d]* ~/PA2/rooms/i/i
+    >ls ~/PA2/rooms/treasureRoom | xargs echo | fold -sw75
+    9 description
+    >i
+    You currently have:
+    A axe
+    A bracelet
+    A floppy
+    A gold
+    A key
+    A lamp
+    A paper
+    A preserver
+    A rms
+    A shovel
+    >score
+    You have scored 00 points.
+    >
+
+Now let's use "put" again. This time we have two treasures. They both will
+go into the urinal. But there will only be one message, the same as before.
+    > ls ~/PA2/rooms/i/i | xargs echo | fold -sw75
+    axe bracelet floppy gold key lamp paper preserver rms shovel
+    >put
+    You hear it plop down in some water below.
+    > ls ~/PA2/rooms/i/i | xargs echo | fold -sw75
+    axe floppy key lamp paper preserver rms shovel
+    > ls ~/PA2/rooms/treasureRoom | xargs echo | fold -sw75
+    9 description
+    > ls | xargs echo | fold -sw75
+    1 description pipe pipes urinal
+    >
+
+So both treasures were move. But where are they? They are in ~/PA2/rooms:
+    >ls ~/PA2/rooms | xargs echo | fold -sw75
+    There bracelet buttonRoom es gold i mistyRoom receivingRoom treasureRoom
+    >
+
+So what the flush command does is: it moves treasures -- and only treasures --
+from the ~/PA2/rooms directory to the treasure room:
+    >flush
+    Whoooosh!!
+    You have scored 20 points.
+    >ls ~/PA2/rooms/treasureRoom/ | xargs echo | fold -sw75
+    9 bracelet description gold
+    >ls ~/PA2/rooms | xargs echo | fold -sw75
+    buttonRoom i mistyRoom receivingRoom There treasureRoom
+    >
+
+So now we understand the scoring system. But looking at the above ~/PA2/rooms
+directory, we notice a file called "There". What is that for? Well, let's see:
+   >cat ~/PA2/rooms/There
+   There is a 10 pound weight here.
+   There is a beach towel on the ground here.
+   There is a box with a slit in it, bolted to the wall here.
+   There is a button on the ground here.
+   There is a floppy disk here.
+   There is a gold bar here.
+   There is a hole in the floor here.
+   There is a lamp nearby.
+   There is a life preserver here.
+   There is a platinum bar here.
+   There is a shimmering diamond here.
+   There is a shiny brass key here.
+   There is a shovel here.
+   There is a silver bar here.
+   There is a slip of paper here.
+   There is an axe here.
+   There is an emerald bracelet here.
+   There is a wax statuette of Richard Stallman here.;rms
+   It is normal room temperature in here.;temperature2
+   It is luke warm in here.;temperature3
+   It is comfortably hot in here.;temperature4
+   It is refreshingly hot in here.;temperature5
+   >
+
+So we see that it lists messages for all of our objects. Here they are:
+   >fgrep -eaxe -ebracelet -efloppy -egold -ekey -elamp -epaper -epreserver -erms -eshovel -eweight ~/PA2/rooms/There 
+   There is a 10 pound weight here.
+   There is a floppy disk here.
+   There is a gold bar here.
+   There is a lamp nearby.
+   There is a life preserver here.
+   There is a shiny brass key here.
+   There is a shovel here.
+   There is a slip of paper here.
+   There is an axe here.
+   There is an emerald bracelet here.
+   There is a wax statuette of Richard Stallman here.;rms
+   >
+The above are, in fact, the messages that display when we enter the rooms
+containing these objects.
+
+But wait. There were other objects in the list, besides the ones we've seen.
+What are those? Well here they are:
+   >fgrep -v -eaxe -ebracelet -efloppy -egold -ekey -elamp -epaper -epreserver -erms -eshovel -eweight ~/PA2/rooms/There
+   There is a beach towel on the ground here.
+   There is a box with a slit in it, bolted to the wall here.
+   There is a button on the ground here.
+   There is a hole in the floor here.
+   There is a platinum bar here.
+   There is a shimmering diamond here.
+   There is a silver bar here.
+   It is normal room temperature in here.;temperature2
+   It is luke warm in here.;temperature3
+   It is comfortably hot in here.;temperature4
+   It is refreshingly hot in here.;temperature5
+   >
+   
+A few of the above look familiar:
+   >fgrep -ebutton -ediamond -etemperatue ~/PA2/rooms/There
+   There is a button on the ground here.
+   There is a shimmering diamond here.
+   It is normal room temperature in here.;temperature2
+   It is luke warm in here.;temperature3
+   It is comfortably hot in here.;temperature4
+   It is refreshingly hot in here.;temperature5
+   >
+
+In our explanatory walkthrough from homework 1, we saw the above messages at
+various points: The diamond is obtained by melting the statuette (but not until
+the next homework). The messages about the temperature are seen when you enter
+the sauna, based on the dial's setting (but we won't change the dial until the
+next homework). And the button is in the maze room. Every time you enter that
+room, it tells you about the button -- and yet, it isn't an object that you can
+pick up. Of course there are other objects that you cannot pick up: the maze
+buttonRoom has a ladder, for example, and the bathroom that we are currently
+in has pipes and a urinal:
+    >l
+    Bathroom
+    You are in a bathroom built for workers in the cave.  There is a
+    urinal hanging on the wall, and some exposed pipes on the opposite
+    wall where a sink used to be.  To the north is a bedroom.
+    >ls | xargs echo | fold -sw75
+    9 description pipe pipes urinal
+    >getall
+    Nothing to take.
+    >
+The button is different than these other objects that you cannot get, however,
+because the button does display a message each time you enter the room. That is
+why it gets a line in the There file.
+
+But there were some other objects in "There". What are they?:
+   >fgrep -v -eaxe -ebracelet -efloppy -egold -ekey -elamp -epaper -epreserver -erms -eshovel -eweight -ebutton -ediamond -etemperatue ~/PA2/rooms/There
+   There is a beach towel on the ground here.
+   There is a box with a slit in it, bolted to the wall here.
+   There is a hole in the floor here.
+   There is a platinum bar here.
+   There is a silver bar here.
+   >
+
+Where are these objects? They are found within a part of the game that we will
+be implementing in later homeworks. If you want to know, they are located near
+our current location in the bathroom. See here:
+    >n
+    Bedroom
+    You are in what appears to be a worker's bedroom.  There is a queen-
+    sized bed in the middle of the room, and a painting hanging on the
+    wall.  A door leads to another room to the south, and stairways
+    lead up and down.
+    >d
+    You cannot go that way.
+    >
+    
+You see? The bedroom's message says that we can go down, but the game won't
+let us. This is because we haven't built these rooms yet. But we do need to
+be aware of the objects that will be down there, because we need our commands
+to work with them, once we add them in later homeworks. The PA2assignment.txt
+file describes how to use the provided filenamesdir directory to test if your
+wildcard patterns find all of the intended matches and no unintended ones.
+
+Let's continue on, by taking a look at this bedroom that we are now in:
+    >ls | xargs echo | fold -sw75
+    9 bed description painting s
+    >x bed
+    It is a queen sized bed, with a very firm mattress.
+    >x painting
+    It is a velvet painting of Elvis Presley.  It seems to be nailed to the
+    wall, and you cannot move it.
+    >getall
+    Nothing to take.
+    >s
+    Bathroom
+    >u
+    You cannot go that way.
+    >ls | xargs echo | fold -sw75
+    9 description pipe pipes urinal
+    >cd ..
+    >l
+    Bedroom
+    You are in what appears to be a worker's bedroom.  There is a queen-
+    sized bed in the middle of the room, and a painting hanging on the
+    wall.  A door leads to another room to the south, and stairways
+    lead up and down.
+    >
+
+You will recall that we entered the bathroom by going down a hole that we
+cannot climb back up. The cd .. always takes us to the bedroom:
+    >u
+    North end of cave passage
+    You are at the north end of a north/south passageway.  There are stairs
+    leading down from here.  There is also a door leading west.
+    >s
+    N/S/W Junction
+    >s
+    South end of cave passage
+    >l
+    South end of cave passage
+    You are at the south end of a north/south passageway.  There is a hole
+    in the floor here, into which you could probably fit.
+    >ls -l
+    total 2
+    -rw-r--r-- 1 Me None   0 Jan 25 01:17 1
+    lrwxrwxrwx 1 Me None   8 Jan 24 22:13 d -> ../n/d/s
+    -rw-r--r-- 1 Me None 151 Jan 27 00:41 description
+    >d
+    Bathroom
+    >u
+    You cannot go that way.
+    >cd ..
+    >l
+    Bedroom
+    You are in what appears to be a worker's bedroom.  There is a queen-
+    sized bed in the middle of the room, and a painting hanging on the
+    wall.  A door leads to another room to the south, and stairways
+    lead up and down.
+    >
+    
+OK. So now there is only one place left to talk about, the locked room:
+    >u
+    North end of cave passage
+    >l
+    North end of cave passage
+    You are at the north end of a north/south passageway.  There are stairs
+    leading down from here.  There is also a door leading west.
+    >w
+    You cannot go that way.
+    >ls -l
+    total 1
+    -rw-r--r--  1 Me None   0 Jan 25 01:18 9
+    drwxr-xr-x+ 1 Me None   0 Jan 25 21:53 d
+    -rw-r--r--  1 Me None 158 Jan 24 22:03 description
+    dr--r--r--+ 1 Me None   0 Jan 24 22:08 w
+    >cd w
+    bash: cd: w: Permission denied
+    >
+
+In the above, we are told, "You cannot go that way." This is not how the real
+game plays. This room has a combination lock, and you will be asked for the
+combination. This will be implemented in the next homework. For now, we just
+get the message that we cannot go that way. This is because we do not have the
+right permissions. But we do have read permission, however, so we can look into
+the room:
+    >ls w | xargs echo | fold -sw75
+    9 cable description ibm
+    >cat w/description
+    Gamma computing center
+    You are in the Gamma Computing Center.  An IBM 3090/600s is whirring
+    away in here.  There is an ethernet cable coming out of one of the units,
+    and going through the ceiling.  There is no console here on which you
+    could type.
+    >cat w/cable
+    I see nothing special about that.
+    >cat w/ibm
+    I see nothing special about that.
+    >quit
+    You have scored 20 points.
+    %
+
+So now we have seen a rather thorough example of how your homework should
+behave. But before moving on to implementation (in the PA2assignment.txt file),
+let's consider a simpler walkthrough, considering just the set of inputs tested
+in the basic grading requirement, as provided in the testInput.sh file:
+    % head -5 testInput.sh
+    source ~/PA2/PA2.sh
+    echo ">x lamp";x lamp
+    echo ">x shovel";x shovel
+    echo ">e";e
+    echo ">n";n
+    %
+    
+From the above, we see that this file begins by running your homework solution
+file, to start the game. It then performs a series of game commands. But it
+echoes each command before executing it. Why does it do this? The reason is
+because this input file is meant to be used by the checkYourOutput.sh script:
+
+    % cat checkYourOutput.sh
+    echo "Be patient. This might take up to 2 minutes to run..."
+    (source ~/PA2/testInput.sh)>~/PA2/testOutput.txt
+    echo Finished Running. Now checking for differences to the expected output:
+    cd ~/PA2
+    diff testOutput.txt expectedOutput.txt && echo You passed the basic test.
+    %
+
+See how the above script runs testInput.txt? By echoing the commands before
+running them, the testOutput.txt file will show the commands that are causing
+the outputs. Notice also that the above script compares your output to the
+expectedOutput.txt file. So this file is the walkthrough for the basic test:
+    % head -21 expectedOutput.txt
+    Receiving room
+    You are in a round, stone room with a door to the east.  There
+    is a sign on the wall that reads: ‘receiving room’.
+    There is a lamp nearby.
+    There is a shiny brass key here.
+    There is a shovel here.
+    There is a slip of paper here.
+    There is an axe here.
+    There is an emerald bracelet here.
+    >x lamp
+    The lamp is hand-crafted by Geppetto.
+    >x shovel
+    It is a normal shovel with a price tag attached that says $19.99.
+    >e
+    Northbound Hallway
+    You are at the south end of a hallway that leads to the north.  There
+    are rooms to the east and west.
+    >n
+    End of N/S Hallway
+    You are at the end of a north/south hallway.  You can go back to the south,
+    or off to a room to the east.
+
+Indeed, the above 21 lines are the expected output for the first 4 commands
+from testInput.sh ("x lamp","x shovel","e","n"). If we look further into the
+test input, we see something interesting:
+    % head -13 testInput.sh | cat -n
+         1  source ~/PA2/PA2.sh
+         2  echo ">x lamp";x lamp
+         3  echo ">x shovel";x shovel
+         4  echo ">e";e
+         5  echo ">n";n
+         6  echo ">e";e
+         7  echo ">i";i
+         8  echo ">getall";getall
+         9  echo ">i";i
+        10  echo ">d";d
+        11  echo ">cd ../../../../../buttonRoom";cd ../../../../../buttonRoom
+        12  echo ">l";l
+        13  echo ">nw";nw
+    %
+    
+The interesting thing to see above is that I used the cd command to go to the
+buttonRoom directory (on line 11). This is a hack. What I really should have
+done is to execute "dropweight" (since I picked the weight up on line 8). But
+I've used cd instead, because the basic test that you need to pass to not get
+a 0% will not test dropweight.
+
+Q1: Why does it not test "dropweight", but does test "getall"?
+A1: Because I randomly chose a subset of things I require in the basic test.
+
+Q2: Does that mean that I don't need to implement dropweight?
+A2: Somewhat. If you just want a (failing) 50% grade, then you don't need to
+    implement dropweight. But, even if you want to get a good grade, you should
+    not start by doing dropweight.
+
+Q3: What do you mean "not start by doing dropweight"?
+A3: Well, if you implement the things required by the test input, then you get
+    at least a 50% score. One of those things is getall. So, an implementation
+    solution without a getall command earns a 0%, even if you've implemented
+    advance features like dropweight. Therefore, you should implement the basic
+    things first. Make sure that you pass the checkYourOutput.sh script before
+    moving on. AND SAVE A BACKUP OF THAT SOLUTION, just in case you mistakenly
+    break one of those commands while trying to do the more complex parts.
+
+Q4: What are the basic parts and what are the advanced parts?
+A4: - Look in the testInput.sh file and see which commands are not used by it.
+    - Also notice that the tested movement always involves going forward, never
+      backward.  This means that the commands for "e", "n", "s", etc, can be
+      implemented very simply and do not need to have the complexity of the
+      "basename ..." part. (Q4a: The "basename ... part"? A4a: When you read
+      PA2assignment.txt, you will see that you are meant to use basename and
+      some other things to accomplish backtracking. But if there is no back-
+      tracking, then you don't have to implement it to achieve basic movement.)
+    - Also, since there is no backtracking, you never re-enter a room. So the
+      full description can be displayed each time, without using the "head ..."
+      part to implement the short display for re-visited rooms. (Q4b: The "head
+      ... part"? A4b: When you read PA2assignment.txt, you will see that the
+      "disp" command uses head to achieve short descriptions.)
+    - Also notice that the test input never takes a wrong turn in the maze.
+    - Also notice that the test input never makes any mistakes that would cause
+      an error message to display: 
+          % cat expectedOutput.txt | fgrep -w -eNo  -enot -ecannot -eNothing
+          %
+      This means that your first implementations of the various commands don't
+      need to handle errors. You don't try moving somewhere you can't. You
+      don't try getting something you can't, putting something you can't, or
+      examining something you can't.
+
+Q5: What do I do after the basic parts work?
+A5: Add in the other features, one-at-a time. Follow this process:
+    1. Save a backup.
+    2. Implement one new feature. Start by trying it out on the command line.
+    3. Add the feature into your answer script.
+    4. Replay the game with your new script and test the new feature.
+    5. Rerun the checkYourOutput.sh script to make sure you didn't break it.
+
+
+Now that you've finished reading this file, next read PA2shortAssignment.txt,
+then PA2assignment.txt...

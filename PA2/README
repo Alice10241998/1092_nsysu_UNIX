@@ -1,0 +1,79 @@
+                            Unix System Programming
+                           Programming Assignment #2
+                       Due: Monday, March 29, at 11:59pm
+
+In the first programming assignment, we learned about the dunnet game, and we
+created the rooms and objects for this game. We also saw a walkthrough of the
+game, but we did not implement the game play.
+
+In this new programming assignment, we will take a first step to programming
+the game. We will combine the rooms and objects from the first homework with
+a set of aliases to implement some of the dunnet game's commands.
+
+Some commands will be implemented to behave much like in the real game: score,
+flush, press, i, x (for examining objects), l (for looking at the room), and
+moving (e,w,n,s,u,d,ne,nw,se,sw). (In the actual game, x and l are synonyms,
+but we will separate them for now: x will take an argument and l will not.)
+
+Other commands will be implemented in a limited way, to simplify the difficulty
+of the homework, and to avoid passing arguments to them: getall (behaves like
+"get all"), dropweight (behaves like "drop weight"), and put (behaves like "put
+bracelet/gold in chute/urinal").
+
+Let's now see what files have been provided. If you are reading this current
+README file, then you must have untarred Programming Assignment #2's tar file.
+Looking in that directory, you will see:
+    % ls ~/PA2
+    PA2assignment.txt       expectedOutput.txt  savedgame
+    PA2shortAssignment.txt  filenamesdir        testInput.sh
+    README                  gradingPolicy.txt   walkthroughPA2.txt
+    checkYourOutput.sh      rooms.tar
+    %
+
+Five of these above files should be read in the following order: README,
+walkthroughPA2.txt, PA2shortAssignment.txt, PA2assignment.txt, and
+gradingPolicy.txt. These files describe the requirements of the assignment.
+(The PA2shortAssignment.txt file is a simplified implementation of the full
+version described in PA2assignment.txt. Implementing this version first will
+ensure that you will get at least a 50%)
+
+Three more of these files are for testing: testInput.sh, expectedOutput.txt,
+and checkYourOutput.sh. These files are described the walkthrough.txt file.
+
+The savedgame file is the same file that you had for programming assignment #1.
+
+The rooms.tar file is my solution to the first homework, but with some added
+files and directories. You can expand it, and see what is in it. You'll see
+that it has two extra directories named "treasureRoom" and "i", and two extra
+files, named "There" and "es". The reason for these additional directories and
+files will be explained in the walkthroughPA2.txt and PA2assignment.txt files.
+As for the directory "i", it has subdirectories "i" and "_". The subdirectory
+"i/i" will be used for your inventory. The "i/_" subdirectory will be used by
+by the "getall" command, as explained in the PA1assignment.txt file.
+
+The remaining item, filenamesdir, is a directory:
+    % ls ~/PA2
+    PA2assignment.txt   expectedOutput.txt  rooms.tar     walkthroughPA2.txt
+    README              filenamesdir        savedgame
+    checkYourOutput.sh  gradingPolicy.txt   testInput.sh
+    % ls ~/PA2/filenamesdir
+    1         button      e       lake     pc        se            temperature5
+    9         cable       floor   lamp     pipe      shovel        temperature6
+    axe       chute       floppy  n        pipes     silver        towel
+    bed       d           gold    ne       platinum  sw            u
+    boulder   description ibm     nw       preserver temperature2  urinal
+    box       dial        key     painting rms       temperature3  w
+    bracelet  diamond     ladder  paper    s         temperature4  weight
+    %
+As we see above, this directory lists all non-hidden file/directory names used
+in the game. Some of these names will look familiar to you from homework #1,
+but others will not look familiar. The reason for these unfamiliar filenames is
+discussed in walkthroughPA2.txt. The reason that I am giving you this directory
+at all is because it is useful for testing your wildcard patterns, as explained
+in the PA2assignment.txt file.
+
+Now that you are done reading this README file, next read walkthroughPA2.txt.
+It demonstrates how this homework will behave, with explanations at each step.
+Then read the PA2assignment.txt file. It explains how you will make aliases to
+implement the game.
+Then read gradingPolicy.txt. It explains how to know that you can get a grade.
